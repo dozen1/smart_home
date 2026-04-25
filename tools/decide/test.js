@@ -270,3 +270,84 @@ test('validatePairwiseCompleteness: rejects > 6 options', () => {
 test('validatePairwiseCompleteness: trivially ok for non-pairwise method', () => {
   assert.deepEqual(validatePairwiseCompleteness({ method: 'weighted', options: [], criteria: [] }), { ok: true });
 });
+
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
+import os from 'node:os';
+import { createRepo } from './repo.js';
+import { renderMarkdown } from './export.js';
+
+async function withTempRepo(fn) {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'decide-'));
+  try {
+    const repo = createRepo({ dataDir: path.join(dir, 'data'), exportDir: path.join(dir, 'exports') });
+    await fn(repo, dir);
+  } finally {
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+}
+
+test('repo: round-trips a decision', async () => {
+  await withTempRepo(async (repo) => {
+    const decision = { slug: 'foo-bar', title: 'T', method: 'weighted', criteria: [], options: [] };
+    await repo.save('foo-bar', decision);
+    const loaded = await repo.load('foo-bar');
+    assert.deepEqual(loaded, decision);
+  });
+});
+
+test('repo: list returns saved slugs and titles', async () => {
+  await withTempRepo(async (repo) => {
+    await repo.save('a-one', { slug: 'a-one', title: 'A', method: 'weighted', criteria: [], options: [] });
+    await repo.save('b-two', { slug: 'b-two', title: 'B', method: 'weighted', criteria: [], options: [] });
+    const list = await repo.list();
+    assert.deepEqual(list.map((d) => d.slug).sort(), ['a-one', 'b-two']);
+  });
+});
+
+test('repo: rejects path-traversal slugs', async () => {
+  await withTempRepo(async (repo) => {
+    await assert.rejects(repo.save('../evil', { slug: '../evil' }), /invalid slug/i);
+    await assert.rejects(repo.load('../evil'), /invalid slug/i);
+  });
+});
+
+test('renderMarkdown: includes title, last-verified, citations, decision', () => {
+  const md = renderMarkdown({
+    slug: 'phase-1-vac',
+    title: 'Phase 1: Robot vacuum',
+    phase: 1,
+    method: 'weighted',
+    criteria: [
+      { name: 'Durability', weight: 3, lower_is_better: false },
+      { name: 'Price (DKK)', weight: 2, lower_is_better: true },
+    ],
+    options: [
+      { id: 'a', name: 'Roborock Q Revo Pro', price_dkk: 4999, retailer_url: 'https://www.proshop.dk/foo', excerpt: 'Pris 4.999 kr.', last_verified: '2026-04-25', scores: { 'Durability': 8, 'Price (DKK)': 4 } },
+      { id: 'b', name: 'Dreame L20 Ultra', price_dkk: 6499, retailer_url: 'https://www.elgiganten.dk/bar', excerpt: 'Pris 6.499 kr.', last_verified: '2026-04-24', scores: { 'Durability': 7, 'Price (DKK)': 6 } },
+    ],
+    notes: 'On discount this week.',
+    decision: 'Roborock Q Revo Pro',
+  });
+  assert.match(md, /^# Phase 1: Robot vacuum/m);
+  assert.match(md, /Last verified: 2026-04-25/);
+  assert.match(md, /Phase: 1/);
+  assert.match(md, /Method: weighted/);
+  assert.match(md, /\| \*\*Roborock Q Revo Pro\*\* \|/);
+  assert.match(md, /\| Dreame L20 Ultra \|/);
+  assert.match(md, /✅ pick/);
+  assert.match(md, /\[proshop\.dk\]\(https:\/\/www\.proshop\.dk\/foo\)/);
+  assert.match(md, /"Pris 4\.999 kr\."/);
+  assert.match(md, /On discount this week\./);
+  assert.match(md, /## Decision\n\nRoborock Q Revo Pro/);
+});
+
+test('renderMarkdown: shows "Pending" when no decision yet', () => {
+  const md = renderMarkdown({
+    slug: 's', title: 'T', phase: null, method: 'weighted',
+    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    options: [{ id: 'a', name: 'A', price_dkk: 1, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
+    notes: '', decision: null,
+  });
+  assert.match(md, /## Decision\n\nPending/);
+});

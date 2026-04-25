@@ -19,14 +19,6 @@ Personal smart home build-out. This repo holds research notes, equipment decisio
 
 Default Danish retailers to cite for prices and stock: **Pricerunner, Elgiganten, Power, Proshop, Komplett, Computersalg, Bilka, Coolshop**.
 
-## Environment
-
-- **OS**: macOS (Apple Silicon)
-- **Node.js 22** via nvm — every new terminal needs: `source ~/.nvm/nvm.sh && nvm use 22`
-- **GitHub CLI**: `gh` installed via Homebrew
-- **Copilot CLI**: terminal-based coding agent — auto-loads this file plus `AGENTS.md`
-- **Git**: 2.38+
-
 ## Repo Layout
 
 ```

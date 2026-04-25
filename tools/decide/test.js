@@ -2,6 +2,14 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import { scoreWeighted, scorePugh, scorePairwise } from './scoring.js';
+import {
+  validateSlug,
+  validateRetailerUrl,
+  validateOption,
+  validatePairwiseCompleteness,
+} from './validation.js';
+
+const today = () => new Date().toISOString().slice(0, 10);
 
 test('scoreWeighted: ranks options on a 0-10 scale, higher score wins', () => {
   const decision = {
@@ -128,4 +136,137 @@ test('scorePairwise: weights criterion priorities', () => {
   assert.equal(ranked[0].id, 'a');
   assert.equal(ranked[0].score.toFixed(3), '0.700');
   assert.equal(ranked[1].score.toFixed(3), '0.300');
+});
+
+test('validateSlug: accepts kebab-case', () => {
+  assert.deepEqual(validateSlug('phase-1-robot-vacuum'), { ok: true });
+});
+
+test('validateSlug: rejects path traversal and unsafe chars', () => {
+  for (const bad of ['../etc', 'foo/bar', 'foo\\bar', 'foo bar', 'FOO', 'foo.txt', '', '  ', '-leading', 'trailing-']) {
+    const r = validateSlug(bad);
+    assert.equal(r.ok, false, `should reject "${bad}"`);
+  }
+});
+
+test('validateSlug: enforces max length', () => {
+  assert.equal(validateSlug('a'.repeat(80)).ok, false);
+  assert.equal(validateSlug('a'.repeat(64)).ok, true);
+});
+
+test('validateRetailerUrl: accepts public https retailer URLs', () => {
+  for (const ok of [
+    'https://www.proshop.dk/Stovsugere/Roborock-Q-Revo-Pro/3214442',
+    'https://www.elgiganten.dk/product/...',
+    'https://pricerunner.dk/p/...',
+  ]) {
+    assert.equal(validateRetailerUrl(ok).ok, true, `should accept ${ok}`);
+  }
+});
+
+test('validateRetailerUrl: rejects unsafe schemes', () => {
+  for (const bad of [
+    'file:///etc/passwd',
+    'data:text/html,<script>',
+    'javascript:alert(1)',
+    'ftp://example.com',
+    'not-a-url',
+  ]) {
+    assert.equal(validateRetailerUrl(bad).ok, false, `should reject ${bad}`);
+  }
+});
+
+test('validateRetailerUrl: rejects loopback and private addresses', () => {
+  for (const bad of [
+    'http://localhost/foo',
+    'http://127.0.0.1:5173/',
+    'http://[::1]/',
+    'http://10.0.0.5/',
+    'http://192.168.1.10/',
+    'http://172.16.0.5/',
+  ]) {
+    assert.equal(validateRetailerUrl(bad).ok, false, `should reject ${bad}`);
+  }
+});
+
+test('validateOption: accepts a complete option', () => {
+  const r = validateOption({
+    id: 'a',
+    name: 'Roborock Q Revo Pro',
+    price_dkk: 4999,
+    retailer_url: 'https://www.proshop.dk/foo',
+    excerpt: 'Pris 4.999 kr. På lager.',
+    last_verified: today(),
+  });
+  assert.deepEqual(r, { ok: true });
+});
+
+test('validateOption: lists every missing field', () => {
+  const r = validateOption({ id: 'a', name: '', price_dkk: null, retailer_url: '', excerpt: '', last_verified: null });
+  assert.equal(r.ok, false);
+  assert.deepEqual(r.errors.sort(), ['excerpt', 'last_verified', 'name', 'price_dkk', 'retailer_url'].sort());
+});
+
+test('validateOption: rejects future last_verified', () => {
+  const r = validateOption({
+    id: 'a', name: 'X', price_dkk: 1, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2099-01-01',
+  });
+  assert.equal(r.ok, false);
+  assert.ok(r.errors.includes('last_verified'));
+});
+
+test('validateOption: rejects negative price', () => {
+  const r = validateOption({
+    id: 'a', name: 'X', price_dkk: -1, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: today(),
+  });
+  assert.equal(r.ok, false);
+  assert.ok(r.errors.includes('price_dkk'));
+});
+
+test('validateOption: rejects excerpt over 500 chars', () => {
+  const r = validateOption({
+    id: 'a', name: 'X', price_dkk: 1, retailer_url: 'https://example.dk/', excerpt: 'x'.repeat(501), last_verified: today(),
+  });
+  assert.equal(r.ok, false);
+  assert.ok(r.errors.includes('excerpt'));
+});
+
+test('validatePairwiseCompleteness: accepts complete upper-triangle for 3 options', () => {
+  const decision = {
+    method: 'pairwise',
+    criteria: [{ name: 'X', weight: 1 }],
+    options: [
+      { id: 'a', pairwise: { X: { b: 2, c: 3 } } },
+      { id: 'b', pairwise: { X: { c: 1 } } },
+      { id: 'c', pairwise: {} },
+    ],
+  };
+  assert.deepEqual(validatePairwiseCompleteness(decision), { ok: true });
+});
+
+test('validatePairwiseCompleteness: reports missing comparisons', () => {
+  const decision = {
+    method: 'pairwise',
+    criteria: [{ name: 'X', weight: 1 }],
+    options: [
+      { id: 'a', pairwise: { X: { b: 2 } } },
+      { id: 'b', pairwise: {} },
+      { id: 'c', pairwise: {} },
+    ],
+  };
+  const r = validatePairwiseCompleteness(decision);
+  assert.equal(r.ok, false);
+  assert.ok(r.errors.some((e) => e.includes('a vs c')));
+  assert.ok(r.errors.some((e) => e.includes('b vs c')));
+});
+
+test('validatePairwiseCompleteness: rejects > 6 options', () => {
+  const options = Array.from({ length: 7 }, (_, i) => ({ id: `o${i}`, pairwise: {} }));
+  const r = validatePairwiseCompleteness({ method: 'pairwise', criteria: [{ name: 'X', weight: 1 }], options });
+  assert.equal(r.ok, false);
+  assert.ok(r.errors.some((e) => e.includes('cap')));
+});
+
+test('validatePairwiseCompleteness: trivially ok for non-pairwise method', () => {
+  assert.deepEqual(validatePairwiseCompleteness({ method: 'weighted', options: [], criteria: [] }), { ok: true });
 });

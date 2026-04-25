@@ -433,3 +433,13 @@ test('server: export with valid data writes markdown and returns 200', async () 
     assert.match(body.markdown_path, /phase-1-vac\.md$/);
   });
 });
+
+test('server: serves /scoring.js from the package root', async () => {
+  await withServer(async (base) => {
+    const r = await fetch(`${base}/scoring.js`);
+    assert.equal(r.status, 200);
+    assert.match(r.headers.get('content-type') ?? '', /javascript/);
+    const body = await r.text();
+    assert.match(body, /export function scoreWeighted/);
+  });
+});

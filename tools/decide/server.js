@@ -97,6 +97,15 @@ export function createServer({ dataDir, exportDir, publicDir }) {
         return send(res, 200, { ok: true, markdown_path });
       }
 
+      if (req.method === 'GET' && pathname === '/scoring.js') {
+        const scoringPath = path.join(path.dirname(publicDir), 'scoring.js');
+        try {
+          const buf = await fs.readFile(scoringPath);
+          return send(res, 200, buf, { 'content-type': MIME['.js'] });
+        } catch {
+          return send(res, 404, 'not found');
+        }
+      }
       if (req.method === 'GET') return serveStatic(publicDir, pathname, res);
 
       send(res, 405, { error: 'method not allowed' });

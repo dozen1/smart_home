@@ -351,3 +351,85 @@ test('renderMarkdown: shows "Pending" when no decision yet', () => {
   });
   assert.match(md, /## Decision\n\nPending/);
 });
+
+import { createServer } from './server.js';
+import { once } from 'node:events';
+
+async function withServer(fn) {
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'decide-srv-'));
+  const server = createServer({
+    dataDir: path.join(dir, 'data'),
+    exportDir: path.join(dir, 'exports'),
+    publicDir: path.join(process.cwd(), 'public'),
+  });
+  server.listen(0);
+  await once(server, 'listening');
+  const { port } = server.address();
+  try {
+    await fn(`http://127.0.0.1:${port}`);
+  } finally {
+    server.close();
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+}
+
+test('server: PUT then GET round-trips a decision', async () => {
+  await withServer(async (base) => {
+    const decision = {
+      slug: 'phase-1-vac', title: 'T', phase: 1, method: 'weighted',
+      criteria: [], options: [], notes: '', decision: null,
+    };
+    const put = await fetch(`${base}/api/decisions/phase-1-vac`, {
+      method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify(decision),
+    });
+    assert.equal(put.status, 200);
+    const got = await fetch(`${base}/api/decisions/phase-1-vac`);
+    assert.equal(got.status, 200);
+    assert.deepEqual(await got.json(), decision);
+  });
+});
+
+test('server: rejects bad slug with 400', async () => {
+  await withServer(async (base) => {
+    const r = await fetch(`${base}/api/decisions/..%2Fevil`, { method: 'PUT', body: '{}', headers: { 'content-type': 'application/json' } });
+    assert.equal(r.status, 400);
+  });
+});
+
+test('server: export with missing required fields returns 422 listing them', async () => {
+  await withServer(async (base) => {
+    const decision = {
+      slug: 'phase-1-vac', title: 'T', phase: 1, method: 'weighted',
+      criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+      options: [{ id: 'a', name: 'A', price_dkk: null, retailer_url: '', excerpt: '', last_verified: null, scores: { X: 5 } }],
+      notes: '', decision: null,
+    };
+    await fetch(`${base}/api/decisions/phase-1-vac`, { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify(decision) });
+    const r = await fetch(`${base}/api/decisions/phase-1-vac/export`, { method: 'POST' });
+    assert.equal(r.status, 422);
+    const body = await r.json();
+    assert.ok(Array.isArray(body.details));
+    assert.ok(body.details.some((d) => d.option === 'a' && d.errors.includes('price_dkk')));
+  });
+});
+
+test('server: export with valid data writes markdown and returns 200', async () => {
+  await withServer(async (base) => {
+    const today = new Date().toISOString().slice(0, 10);
+    const decision = {
+      slug: 'phase-1-vac', title: 'T', phase: 1, method: 'weighted',
+      criteria: [{ name: 'Durability', weight: 1, lower_is_better: false }],
+      options: [{
+        id: 'a', name: 'A',
+        price_dkk: 4999, retailer_url: 'https://www.proshop.dk/foo', excerpt: 'Pris 4.999 kr.', last_verified: today,
+        scores: { Durability: 8 }, pugh: {}, pairwise: {},
+      }],
+      notes: '', decision: null,
+    };
+    await fetch(`${base}/api/decisions/phase-1-vac`, { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify(decision) });
+    const r = await fetch(`${base}/api/decisions/phase-1-vac/export`, { method: 'POST' });
+    assert.equal(r.status, 200);
+    const body = await r.json();
+    assert.match(body.markdown_path, /phase-1-vac\.md$/);
+  });
+});

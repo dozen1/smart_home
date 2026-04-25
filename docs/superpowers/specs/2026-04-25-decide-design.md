@@ -64,6 +64,7 @@ docs/decisions/
 - Each criterion has a `weight` (1–5) and an optional `lower_is_better` flag.
 - Each option has a `score` (0–10) per criterion.
 - Final score = `Σ ((lower_is_better ? (10 - score) : score) * weight) / Σ weight`.
+- Result is on the same **0–10 scale** as the inputs. The division by `Σ weight` is intentional: it keeps the score interpretable (e.g. "8.2 / 10") regardless of how many criteria or how high the weights run. Scores are meaningful for ranking *within* a decision; they are **not** meant to be compared across decisions with different criteria sets.
 - Ranked descending.
 
 ### Pugh
@@ -81,6 +82,8 @@ docs/decisions/
 - Ranked descending.
 - Cap at 6 options to keep pairwise tractable; show a warning if more.
 
+**Pairwise storage rule:** only the upper triangle is stored. For options A and B with `A.id < B.id`, the comparison is recorded once on `A.pairwise[criterion][B.id]`. The reciprocal (`B vs A = 1 / value`) is computed at scoring time, never stored. The server validates that for N options each criterion has exactly `C(N, 2)` upper-triangle entries before allowing export.
+
 ## Required Fields per Option (validation gate)
 
 Before an option can be included in an export, the server validates:
@@ -89,7 +92,7 @@ Before an option can be included in an export, the server validates:
 |---|---|
 | `name` | Non-empty string, ≤ 120 chars |
 | `price_dkk` | Number ≥ 0 |
-| `retailer_url` | Valid `http(s)://` URL |
+| `retailer_url` | Valid `https://` URL (or `http://` for whitelisted Danish retailer hostnames). Reject `file://`, `data:`, `javascript:`, and any host that resolves to a loopback / private address (`localhost`, `127.0.0.0/8`, `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `::1`, `fc00::/7`). The URL must point at a publicly verifiable retailer page. |
 | `excerpt` | Non-empty string, ≤ 500 chars (the relevant text from that page) |
 | `last_verified` | ISO date `YYYY-MM-DD`, not in the future |
 
@@ -160,6 +163,8 @@ Phase: <phase>  ·  Method: <method>
 
 <decision block, or "Pending">
 ```
+
+> Note: the `max()` over `option.last_verified` in the header is safe because export validation rejects any decision where any option is missing `last_verified` (returns 422). The renderer assumes all dates are present.
 
 ## Error Handling
 

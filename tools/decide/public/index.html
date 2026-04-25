@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>decide</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>decide</h1>
+    <button id="new-decision">+ New decision</button>
+  </header>
+  <main>
+    <aside id="sidebar">
+      <h2>Decisions</h2>
+      <ul id="decision-list"></ul>
+    </aside>
+    <section id="editor" hidden>
+      <header class="editor-head">
+        <input id="title" placeholder="Title" />
+        <select id="method">
+          <option value="weighted">Weighted</option>
+          <option value="pugh">Pugh</option>
+          <option value="pairwise">Pairwise</option>
+        </select>
+        <input id="phase" type="number" min="1" placeholder="Phase" />
+        <button id="save">Save</button>
+        <button id="export">Export markdown</button>
+      </header>
+
+      <section>
+        <h3>Criteria</h3>
+        <table id="criteria-table"><thead><tr><th>Name</th><th>Weight (1–5)</th><th>Lower is better</th><th></th></tr></thead><tbody></tbody></table>
+        <button id="add-criterion">+ Criterion</button>
+      </section>
+
+      <section>
+        <h3>Options</h3>
+        <div id="options-list"></div>
+        <button id="add-option">+ Option</button>
+      </section>
+
+      <section id="score-panel">
+        <h3>Scoring</h3>
+        <div id="score-area"></div>
+        <h4>Ranking</h4>
+        <ol id="ranking"></ol>
+      </section>
+
+      <section>
+        <h3>Notes</h3>
+        <textarea id="notes" rows="4"></textarea>
+        <h3>Decision</h3>
+        <input id="decision-text" placeholder="Final pick (or leave blank for Pending)" />
+      </section>
+
+      <p id="status" role="status"></p>
+    </section>
+  </main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

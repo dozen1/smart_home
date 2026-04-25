@@ -37,21 +37,29 @@ README.md
 2. **Conventional commits** — `feat:`, `fix:`, `docs:`, `chore:` prefixes.
 3. **Branch per change** — branch off `main`, PR to merge.
 4. **Never merge PRs** — only the repo owner merges. Copilot creates PRs and stops.
-5. **Keep it lean** — no files without purpose. No empty folders. No placeholder stubs.
+5. **Keep it lean** — no files without purpose. Create folders only when first content is added.
 6. **Cite sources for product / price / spec claims** — every recommendation that depends on external information (price, availability, specs, compatibility, vendor policy) must include a verifiable URL **and** a relevant excerpt from the page. No claims from training-data memory alone.
-7. **MCP-first for GitHub** — when MCP write tools are available in the current session, use them for PRs, issues, branches. Fall back to `gh` CLI only when the MCP tool doesn't exist in the session.
+7. **MCP-first for GitHub** — when MCP tools for creating / updating PRs, issues, or branches are available in the current session, use them. Fall back to `gh` CLI only when the equivalent MCP tool doesn't exist. Never merge PRs via any method — only the owner merges.
 8. **Docs stay current** — when an equipment choice changes, update the relevant decision doc.
 
 ## Advisory Standards (smart-home recommendations)
 
 - **User-aligned advice only** — recommendations serve the user's economic and convenience interests exclusively. No vendor, platform, or popularity bias. When two options are functionally equivalent, recommend the cheaper / more convenient one, not the better-known one. When the cheaper option has a real downside, quantify it. Disclose trade-offs honestly, including against personally-preferred brands. No sponsored, affiliate, or "received-wisdom" recommendations.
 - **Brainstorm before recommending** — confirm scope, budget, ecosystem constraints, floor type, household specifics. Don't dump generic top-10 lists.
-- **Cite Danish retailers** for prices (Pricerunner first, then Elgiganten / Power / Proshop / Komplett / Computersalg / Bilka / Coolshop). Quote URL + excerpt.
+- **Cite Danish retailers** for prices (Pricerunner first, then Elgiganten / Power / Proshop / Komplett / Computersalg / Bilka / Coolshop). Quote URL + excerpt. **Fallback**: if not available in Denmark, cite the official vendor store or a primary EU retailer that ships to DK, note the import / shipping cost, and flag that it is not locally stocked.
 - **Trade-off tables, not prose paragraphs** — when comparing 2+ options, present a table with criteria → options → outcome → pick.
 - **Matter-first**, then platform-native, then ecosystem-locked — in that preference order.
 - **Phase-aware** — every recommendation says where it fits in the rollout (Phase 1: cleaning; Phase 2: lighting; etc.) and what foundational decisions it commits the user to.
 - **Flag unverifiable claims** — if a price or spec couldn't be fetched, say so explicitly rather than guessing.
-- **Always include `Last verified: YYYY-MM-DD`** on price-sensitive docs.
+- **Always include `Last verified: YYYY-MM-DD`** — at the top of the doc for document-wide verification, or inline per-product / per-row when partial updates occur. When in doubt, timestamp the entire doc and re-verify all claims on update.
+
+### Smart Home Specific Concerns
+
+- **Privacy first** — flag any device with mandatory cloud processing, telemetry, or vendor data collection. Prefer local-only or local-first devices (Matter-over-Thread, ESPHome, Zigbee2MQTT) over cloud-bound ones.
+- **Vendor lock-in** — warn when a choice commits the user to a single ecosystem (e.g., Hue bridge ⇒ Philips lighting; Aqara hub ⇒ Aqara sensors). Matter / Thread devices preserve flexibility.
+- **Firmware update policy** — check the vendor's update track record. Flag devices with no update mechanism, abandoned product lines, or known EOL dates.
+- **Network segmentation** — recommend an IoT VLAN / guest Wi-Fi for untrusted devices when the user's router supports it. Document which devices can be safely isolated and which need access to the main network.
+- **GDPR and data residency** — if the device or its app stores personal data, prefer EU-hosted services or local processing. Note the data controller for any cloud service.
 
 ## Code & Doc Standards
 
@@ -116,27 +124,26 @@ The set of available MCP servers depends on the session (VS Code Copilot Chat vs
 
 These workflow steps are **not optional**. They apply to every feature, automation, or non-trivial change — in both VS Code Copilot Chat and Copilot CLI.
 
-### MUST brainstorm before implementing
+### MUST brainstorm before implementing (except trivial fixes)
 - New phases, equipment choices, or refactors require a design conversation first
 - Ask clarifying questions. Explore alternatives. Present design in digestible chunks.
 - Save the agreed design before writing any code or making the purchase recommendation
-- Skip only for trivial fixes (typos, one-line changes, doc updates)
 
-### MUST write implementation plans before coding
+### MUST write implementation plans before coding (unless user says "just do it")
 - Break work into small tasks (2–5 minutes each)
 - Each task specifies: exact file paths, what to change, verification steps
 - Present the plan for approval before starting implementation
-- Skip only when the user explicitly says "just do it"
 
-### MUST follow TDD for code changes
+### MUST follow TDD for automation code (when applicable)
+- Applies when writing automation scripts, Home Assistant configs with logic, or any programmatic behavior
 - **RED**: Write a failing test first
 - **GREEN**: Write minimal code to make the test pass
 - **REFACTOR**: Clean up while keeping tests green
 - Never write production code before the test exists
-- Skip only for non-code changes (docs, configs) or when no test framework exists
+- Not applicable to research docs, equipment decision logs, or prose content
 
 ### MUST use sub-agents for multi-task or multi-thread work
-- **Trigger**: any plan with ≥ 3 implementation tasks, OR ≥ 2 independent research threads (e.g., comparing 3 product brands → 3 sub-agents in parallel, one per brand).
+- **Trigger**: any plan with ≥ 5 implementation tasks, OR ≥ 2 independent research threads that benefit from parallelism (e.g., comparing 3 product brands → 3 sub-agents in parallel, one per brand). Below the threshold, work inline.
 - **Default to parallel** — dispatch sub-agents simultaneously via the `task` tool with `mode: "background"` whenever the work has no inter-task dependencies.
 - **Announce dispatch** — state which sub-agents are being launched and what each one is researching or implementing, before launching.
 - **Use specialized agents** when one matches the task (e.g., `Code Reviewer`, `Tracking & Measurement Specialist`, `Backend Architect`); fall back to `general-purpose` only when no specialist fits.
@@ -148,6 +155,17 @@ These workflow steps are **not optional**. They apply to every feature, automati
 - Self-review against the plan before declaring done
 - Report issues by severity (critical blocks progress, warnings don't)
 - Verify all tests pass before finishing
+
+### PR Review Format (when invoked as code reviewer)
+
+When dispatching the `code-review` sub-agent (or reviewing as the orchestrator), reviews must be:
+
+- **Concise**: each finding is `<severity>: <one-line problem>` followed by `file:line` and a paste-ready fix.
+- **Severity-graded**: CRITICAL (blocks merge) / HIGH (should fix before merge) / MEDIUM (fix soon) / LOW (polish, optional).
+- **Suggestion-block-friendly**: where the fix is a short replacement, render it as a GitHub suggestion code block so the author can one-click apply.
+- **Signal-only**: never comment on style, formatting, or trivia. Only surface issues that genuinely matter (correctness, contradictions, security, missing rationale, drift risk).
+- **Verdict-terminated**: end with one line — APPROVE / APPROVE WITH NITS / REQUEST CHANGES.
+- **Posted to the PR** as a comment (since GitHub disallows formal self-review on own PRs) for traceability — not just delivered inline in chat.
 
 ### Workflow Violations (NEVER do these)
 - Jumping straight to code without brainstorming on new features

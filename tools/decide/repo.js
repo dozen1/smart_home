@@ -11,8 +11,8 @@ export function createRepo({ dataDir, exportDir }) {
     const v = validateSlug(slug);
     if (!v.ok) throw new Error(`invalid slug: ${v.reason}`);
     const p = path.join(dataDir, `${slug}.json`);
-    const resolved = path.resolve(p);
-    if (!resolved.startsWith(path.resolve(dataDir) + path.sep)) {
+    const resolved = path.resolve(p).toLowerCase();
+    if (!resolved.startsWith(path.resolve(dataDir).toLowerCase() + path.sep)) {
       throw new Error('invalid slug: path escape');
     }
     return p;
@@ -21,15 +21,16 @@ export function createRepo({ dataDir, exportDir }) {
     const v = validateSlug(slug);
     if (!v.ok) throw new Error(`invalid slug: ${v.reason}`);
     const p = path.join(exportDir, `${slug}.md`);
-    const resolved = path.resolve(p);
-    if (!resolved.startsWith(path.resolve(exportDir) + path.sep)) {
+    const resolved = path.resolve(p).toLowerCase();
+    if (!resolved.startsWith(path.resolve(exportDir).toLowerCase() + path.sep)) {
       throw new Error('invalid slug: path escape');
     }
     return p;
   }
   async function atomicWrite(target, contents) {
     await ensureDirs();
-    const tmp = `${target}.${process.pid}.${Date.now()}.tmp`;
+    const rand = Math.random().toString(36).slice(2);
+    const tmp = `${target}.${process.pid}.${rand}.tmp`;
     await fs.writeFile(tmp, contents, 'utf8');
     await fs.rename(tmp, target);
   }

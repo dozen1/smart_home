@@ -443,3 +443,25 @@ test('server: serves /scoring.js from the package root', async () => {
     assert.match(body, /export function scoreWeighted/);
   });
 });
+
+test('renderMarkdown: escapes pipes in option names so the table does not break', () => {
+  const md = renderMarkdown({
+    slug: 's', title: 'T', phase: null, method: 'weighted',
+    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    options: [{ id: 'a', name: 'Foo | Bar', price_dkk: 1, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
+    notes: '', decision: null,
+  });
+  assert.match(md, /Foo \\\| Bar/);
+});
+
+test('server: rejects oversized request bodies with 413', async () => {
+  await withServer(async (base) => {
+    const huge = 'x'.repeat(11 * 1024 * 1024);
+    const r = await fetch(`${base}/api/decisions/big-decision`, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ title: huge }),
+    });
+    assert.equal(r.status, 413);
+  });
+});

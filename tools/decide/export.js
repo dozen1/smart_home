@@ -19,6 +19,18 @@ function fmtScore(score, method) {
   return String(score);
 }
 
+function escapeMdCell(str) {
+  return String(str ?? '').replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
+}
+
+function escapeMdLinkText(str) {
+  return String(str ?? '').replace(/\]/g, '\\]').replace(/\r?\n/g, ' ');
+}
+
+function escapeMdQuoted(str) {
+  return String(str ?? '').replace(/"/g, '\\"').replace(/\r?\n/g, ' ');
+}
+
 function hostnameOf(url) {
   try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return url; }
 }
@@ -36,7 +48,7 @@ export function renderMarkdown(decision) {
   lines.push('');
 
   const criteria = decision.criteria ?? [];
-  const header = ['Option', 'Price (DKK)', ...criteria.map((c) => c.name), 'Score', 'Verdict'];
+  const header = ['Option', 'Price (DKK)', ...criteria.map((c) => escapeMdCell(c.name)), 'Score', 'Verdict'];
   const sep = header.map(() => '---');
   lines.push('## Trade-off table');
   lines.push('');
@@ -45,8 +57,9 @@ export function renderMarkdown(decision) {
   for (const r of ranked) {
     const opt = decision.options.find((o) => o.id === r.id);
     if (!opt) continue;
+    const safeName = escapeMdCell(opt.name);
     const cells = [
-      r.id === winnerId ? `**${opt.name}**` : opt.name,
+      r.id === winnerId ? `**${safeName}**` : safeName,
       String(opt.price_dkk),
       ...criteria.map((c) => {
         if (decision.method === 'pugh') return String(opt.pugh?.[c.name] ?? 0);
@@ -62,7 +75,7 @@ export function renderMarkdown(decision) {
   lines.push('## Citations');
   lines.push('');
   for (const opt of decision.options) {
-    lines.push(`- **${opt.name}** — [${hostnameOf(opt.retailer_url)}](${opt.retailer_url}) — _"${opt.excerpt}"_  (verified ${opt.last_verified})`);
+    lines.push(`- **${escapeMdLinkText(opt.name)}** — [${hostnameOf(opt.retailer_url)}](${opt.retailer_url}) — _"${escapeMdQuoted(opt.excerpt)}"_  (verified ${opt.last_verified})`);
   }
   lines.push('');
 

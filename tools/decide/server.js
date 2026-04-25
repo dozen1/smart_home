@@ -26,7 +26,13 @@ function send(res, status, body, headers = {}) {
 
 async function readJson(req) {
   const chunks = [];
-  for await (const c of req) chunks.push(c);
+  let totalSize = 0;
+  const MAX_BODY_SIZE = 10 * 1024 * 1024;
+  for await (const c of req) {
+    totalSize += c.length;
+    if (totalSize > MAX_BODY_SIZE) throw new Error('request body too large');
+    chunks.push(c);
+  }
   if (chunks.length === 0) return {};
   try { return JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { return null; }
 }
@@ -77,7 +83,9 @@ export function createServer({ dataDir, exportDir, publicDir }) {
           catch { return send(res, 404, { error: 'not found' }); }
         }
         if (req.method === 'PUT') {
-          const body = await readJson(req);
+          let body;
+          try { body = await readJson(req); }
+          catch { return send(res, 413, { error: 'request body too large' }); }
           if (!body || typeof body !== 'object') return send(res, 400, { error: 'invalid json' });
           await repo.save(slug, { ...body, slug });
           return send(res, 200, { ok: true });

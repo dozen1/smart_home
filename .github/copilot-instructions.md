@@ -44,6 +44,7 @@ README.md
 
 ## Advisory Standards (smart-home recommendations)
 
+- **User-aligned advice only** — recommendations serve the user's economic and convenience interests exclusively. No vendor, platform, or popularity bias. When two options are functionally equivalent, recommend the cheaper / more convenient one, not the better-known one. When the cheaper option has a real downside, quantify it. Disclose trade-offs honestly, including against personally-preferred brands. No sponsored, affiliate, or "received-wisdom" recommendations.
 - **Brainstorm before recommending** — confirm scope, budget, ecosystem constraints, floor type, household specifics. Don't dump generic top-10 lists.
 - **Cite Danish retailers** for prices (Pricerunner first, then Elgiganten / Power / Proshop / Komplett / Computersalg / Bilka / Coolshop). Quote URL + excerpt.
 - **Trade-off tables, not prose paragraphs** — when comparing 2+ options, present a table with criteria → options → outcome → pick.
@@ -134,11 +135,14 @@ These workflow steps are **not optional**. They apply to every feature, automati
 - Never write production code before the test exists
 - Skip only for non-code changes (docs, configs) or when no test framework exists
 
-### MUST use subagents for multi-task work
-- When a plan has 3+ implementation tasks, dispatch subagents per task
-- Each subagent gets: the task spec, relevant context, and verification criteria
-- Review subagent output before proceeding (spec compliance, then code quality)
-- The orchestrating agent never writes code directly — it delegates and reviews
+### MUST use sub-agents for multi-task or multi-thread work
+- **Trigger**: any plan with ≥ 3 implementation tasks, OR ≥ 2 independent research threads (e.g., comparing 3 product brands → 3 sub-agents in parallel, one per brand).
+- **Default to parallel** — dispatch sub-agents simultaneously via the `task` tool with `mode: "background"` whenever the work has no inter-task dependencies.
+- **Announce dispatch** — state which sub-agents are being launched and what each one is researching or implementing, before launching.
+- **Use specialized agents** when one matches the task (e.g., `Code Reviewer`, `Tracking & Measurement Specialist`, `Backend Architect`); fall back to `general-purpose` only when no specialist fits.
+- Each sub-agent gets: the task spec, relevant context, and verification criteria.
+- Review sub-agent output before proceeding (spec compliance first, then quality).
+- The orchestrator never writes implementation code directly when sub-agents are in play — it delegates, reviews, integrates.
 
 ### MUST request code review after completing tasks
 - Self-review against the plan before declaring done

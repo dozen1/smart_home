@@ -465,3 +465,54 @@ test('server: rejects oversized request bodies with 413', async () => {
     assert.equal(r.status, 413);
   });
 });
+
+test('validateRetailerUrl: rejects http:// (https-only)', () => {
+  const r = validateRetailerUrl('http://www.pricerunner.dk/foo');
+  assert.equal(r.ok, false);
+});
+
+test('validateRetailerUrl: rejects URLs longer than 2048 chars', () => {
+  const long = 'https://example.com/' + 'a'.repeat(2050);
+  const r = validateRetailerUrl(long);
+  assert.equal(r.ok, false);
+});
+
+test('validateRetailerUrl: blocks 169.254.169.254 (cloud metadata)', () => {
+  const r = validateRetailerUrl('https://169.254.169.254/latest/meta-data/');
+  assert.equal(r.ok, false);
+});
+
+test('validateRetailerUrl: blocks 0.0.0.0', () => {
+  const r = validateRetailerUrl('https://0.0.0.0/');
+  assert.equal(r.ok, false);
+});
+
+test('validateRetailerUrl: blocks CGNAT 100.64.0.0/10', () => {
+  const r = validateRetailerUrl('https://100.64.0.1/');
+  assert.equal(r.ok, false);
+});
+
+test('validateRetailerUrl: blocks multicast 224.0.0.0/4', () => {
+  const r = validateRetailerUrl('https://224.0.0.1/');
+  assert.equal(r.ok, false);
+});
+
+test('validateRetailerUrl: blocks IPv6 link-local fe80::', () => {
+  const r = validateRetailerUrl('https://[fe80::1]/');
+  assert.equal(r.ok, false);
+});
+
+test('validateRetailerUrl: blocks IPv6 multicast ff02::', () => {
+  const r = validateRetailerUrl('https://[ff02::1]/');
+  assert.equal(r.ok, false);
+});
+
+test('validateRetailerUrl: blocks IPv6 unspecified ::', () => {
+  const r = validateRetailerUrl('https://[::]/');
+  assert.equal(r.ok, false);
+});
+
+test('validateRetailerUrl: still accepts a normal pricerunner.dk URL', () => {
+  const r = validateRetailerUrl('https://www.pricerunner.dk/pl/19-3308868798/Stoevsugere/Foo');
+  assert.equal(r.ok, true);
+});

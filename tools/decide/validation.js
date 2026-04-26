@@ -8,7 +8,9 @@ export function validateSlug(slug) {
   return { ok: true };
 }
 
-function isPrivateOrLoopbackHost(host) {
+const MAX_URL_LEN = 2048;
+
+function isBlockedHost(host) {
   if (!host) return true;
   const h = host.toLowerCase();
   if (h === 'localhost' || h.endsWith('.localhost')) return true;
@@ -17,12 +19,20 @@ function isPrivateOrLoopbackHost(host) {
   const v4 = naked.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
   if (v4) {
     const [a, b] = [parseInt(v4[1], 10), parseInt(v4[2], 10)];
-    if (a === 127) return true;
-    if (a === 10) return true;
-    if (a === 192 && b === 168) return true;
-    if (a === 172 && b >= 16 && b <= 31) return true;
+    if (a === 0) return true;                              // 0.0.0.0/8 (unspecified)
+    if (a === 127) return true;                            // loopback
+    if (a === 10) return true;                             // RFC1918 private
+    if (a === 192 && b === 168) return true;               // RFC1918 private
+    if (a === 172 && b >= 16 && b <= 31) return true;      // RFC1918 private
+    if (a === 169 && b === 254) return true;               // link-local incl. cloud metadata 169.254.169.254
+    if (a === 100 && b >= 64 && b <= 127) return true;     // CGNAT 100.64.0.0/10
+    if (a >= 224) return true;                             // multicast 224.0.0.0/4 + reserved 240.0.0.0/4
   }
-  if (/^fc[0-9a-f]{2}:/i.test(naked) || /^fd[0-9a-f]{2}:/i.test(naked)) return true;
+  if (naked === '::') return true;                         // IPv6 unspecified
+  if (/^fc[0-9a-f]{2}:/i.test(naked)) return true;         // IPv6 ULA fc00::/8
+  if (/^fd[0-9a-f]{2}:/i.test(naked)) return true;         // IPv6 ULA fd00::/8
+  if (/^fe80:/i.test(naked)) return true;                  // IPv6 link-local
+  if (/^ff[0-9a-f]{2}:/i.test(naked)) return true;         // IPv6 multicast
   return false;
 }
 
@@ -30,17 +40,20 @@ export function validateRetailerUrl(value) {
   if (typeof value !== 'string' || value.length === 0) {
     return { ok: false, reason: 'retailer_url is required' };
   }
+  if (value.length > MAX_URL_LEN) {
+    return { ok: false, reason: `retailer_url exceeds max length ${MAX_URL_LEN}` };
+  }
   let url;
   try {
     url = new URL(value);
   } catch {
     return { ok: false, reason: 'retailer_url must be a valid URL' };
   }
-  if (url.protocol !== 'https:' && url.protocol !== 'http:') {
-    return { ok: false, reason: `unsupported scheme ${url.protocol}` };
+  if (url.protocol !== 'https:') {
+    return { ok: false, reason: `retailer_url must use https (got ${url.protocol})` };
   }
-  if (isPrivateOrLoopbackHost(url.hostname)) {
-    return { ok: false, reason: 'retailer_url cannot be a loopback or private address' };
+  if (isBlockedHost(url.hostname)) {
+    return { ok: false, reason: 'retailer_url host is loopback, private, link-local, multicast, or unspecified' };
   }
   return { ok: true };
 }

@@ -1,0 +1,138 @@
+{
+  "slug": "phase-1-robot-vacuum-mop",
+  "title": "Phase 1 — Robot vacuum + mop",
+  "phase": 1,
+  "method": "weighted",
+  "criteria": [
+    { "name": "Durability + parts/spares", "weight": 0.25 },
+    { "name": "Warranty length", "weight": 0.10 },
+    { "name": "Discount vs MSRP", "weight": 0.15 },
+    { "name": "Value for price", "weight": 0.15 },
+    { "name": "Dock features (auto-empty + auto-wash)", "weight": 0.20 },
+    { "name": "Matter / ecosystem flexibility", "weight": 0.05 },
+    { "name": "Suction + navigation", "weight": 0.10 }
+  ],
+  "options": [
+    {
+      "id": "mova-e30-ultra",
+      "name": "MOVA E30 Ultra (Dreame sub-brand)",
+      "price_dkk": 2206,
+      "retailer_url": "https://www.pricerunner.dk/pl/1613-3332197665/Robotstoevsugere/Mova-E30-Ultra-RLE51SE-Hvid-Sammenlign-Priser",
+      "excerpt": "Mova - E30 Ultra – Smart Robotstøvsuger – 2-i-1 Støvsuger & Moppe … 2.206 kr. Spec from same page (avXperten offer): Dreame Mova E30 2-i-1 Robotstøvsuger med Moppefunktion - 7000Pa - Hvid",
+      "last_verified": "2026-04-26",
+      "scores": {
+        "Durability + parts/spares": 7,
+        "Warranty length": 5,
+        "Discount vs MSRP": 7,
+        "Value for price": 10,
+        "Dock features (auto-empty + auto-wash)": 10,
+        "Matter / ecosystem flexibility": 3,
+        "Suction + navigation": 9
+      }
+    },
+    {
+      "id": "roborock-qr-798",
+      "name": "Roborock QR 798 (Elgiganten authorized)",
+      "price_dkk": 3929,
+      "retailer_url": "https://www.pricerunner.dk/pl/1613-3414754694/Robotstoevsugere/Roborock-QR-798-Robotstoevsuger-Hvid-Sammenlign-Priser",
+      "excerpt": "Elgiganten … Roborock autoriseret … Roborock Qrevo 798 rengøringsrobot (hvid) … 3.929 kr.",
+      "last_verified": "2026-04-26",
+      "scores": {
+        "Durability + parts/spares": 9,
+        "Warranty length": 7,
+        "Discount vs MSRP": 5,
+        "Value for price": 6,
+        "Dock features (auto-empty + auto-wash)": 9,
+        "Matter / ecosystem flexibility": 3,
+        "Suction + navigation": 7
+      }
+    },
+    {
+      "id": "ecovacs-t80-omni",
+      "name": "Ecovacs Deebot T80 Omni",
+      "price_dkk": 3699,
+      "retailer_url": "https://www.pricerunner.dk/pl/1613-3403671269/Robotstoevsugere/Ecovacs-Deebot-T80-Omni-Schwarz-Sammenlign-Priser",
+      "excerpt": "Ecovacs Deebot T80 Omni rengøringsrobot 110-2488-0101 (sort) … 7.499 kr. 3.699 kr.",
+      "last_verified": "2026-04-26",
+      "scores": {
+        "Durability + parts/spares": 7,
+        "Warranty length": 6,
+        "Discount vs MSRP": 9,
+        "Value for price": 7,
+        "Dock features (auto-empty + auto-wash)": 10,
+        "Matter / ecosystem flexibility": 5,
+        "Suction + navigation": 8
+      }
+    },
+    {
+      "id": "ecovacs-x8-omni",
+      "name": "Ecovacs Deebot X8 Omni",
+      "price_dkk": 3999,
+      "retailer_url": "https://www.pricerunner.dk/pl/1613-3393666152/Robotstoevsugere/Ecovacs-Deebot-X8-Omni-Sammenlign-Priser",
+      "excerpt": "Ecovacs X8 Omni rengøringsrobot DDX15-23EC (sort) … 7.299 kr. 3.999 kr.",
+      "last_verified": "2026-04-26",
+      "scores": {
+        "Durability + parts/spares": 7,
+        "Warranty length": 6,
+        "Discount vs MSRP": 8,
+        "Value for price": 6,
+        "Dock features (auto-empty + auto-wash)": 10,
+        "Matter / ecosystem flexibility": 4,
+        "Suction + navigation": 8
+      }
+    },
+    {
+      "id": "ecovacs-n30-pro-omni",
+      "name": "Ecovacs Deebot N30 Pro Omni",
+      "price_dkk": 2999,
+      "retailer_url": "https://www.pricerunner.dk/search?q=ecovacs+deebot",
+      "excerpt": "Ecovacs DEEBOT N30 PRO OMNI Hvid … 2.999 kr.",
+      "last_verified": "2026-04-26",
+      "scores": {
+        "Durability + parts/spares": 6,
+        "Warranty length": 5,
+        "Discount vs MSRP": 5,
+        "Value for price": 7,
+        "Dock features (auto-empty + auto-wash)": 9,
+        "Matter / ecosystem flexibility": 3,
+        "Suction + navigation": 6
+      }
+    },
+    {
+      "id": "ecovacs-n20-plus",
+      "name": "Ecovacs Deebot N20 Plus (auto-empty only, no mop wash)",
+      "price_dkk": 1929,
+      "retailer_url": "https://www.pricerunner.dk/pl/1613-3329882934/Robotstoevsugere/Ecovacs-Deebot-N20-Plus-Hvid-Sammenlign-Priser",
+      "excerpt": "Ecovacs Deebot N20 Plus Hvid … 1.929 kr. — Robotstøvsuger - 400ml, 45W - Hvid",
+      "last_verified": "2026-04-26",
+      "scores": {
+        "Durability + parts/spares": 6,
+        "Warranty length": 5,
+        "Discount vs MSRP": 5,
+        "Value for price": 6,
+        "Dock features (auto-empty + auto-wash)": 5,
+        "Matter / ecosystem flexibility": 3,
+        "Suction + navigation": 5
+      }
+    },
+    {
+      "id": "dreame-l10s-pro-gen2",
+      "name": "Dreame L10s Pro Gen 2 (charge-only dock)",
+      "price_dkk": 1569,
+      "retailer_url": "https://www.pricerunner.dk/search?q=robotst%C3%B8vsuger+mop",
+      "excerpt": "Dreame L10s Pro Gen 2 Vacuum Robot Robotstøvsuger Hvid … 1.569 kr. … 9+ butikker",
+      "last_verified": "2026-04-26",
+      "scores": {
+        "Durability + parts/spares": 7,
+        "Warranty length": 5,
+        "Discount vs MSRP": 5,
+        "Value for price": 5,
+        "Dock features (auto-empty + auto-wash)": 2,
+        "Matter / ecosystem flexibility": 3,
+        "Suction + navigation": 6
+      }
+    }
+  ],
+  "notes": "Constraints: 80 m² laminate + wood-panel floors, no pets, ≤4,000 DKK ceiling, stretch toward auto-empty + auto-mop-wash dock if discount allows, Matter preferred (preserves ecosystem flexibility — see .github/copilot-instructions.md). Caveats from research: Matter support could not be verified from a fetchable manufacturer page for any candidate; if Matter is a hard requirement re-scope to SwitchBot S10 / Roborock S8 MaxV Ultra (well over budget). Suction Pa numbers verified only for MOVA E30 Ultra (7000 Pa); other Pa figures unverified. Warranty rows are Danish statutory minimum (24 mdr, købeloven §83) unless extended — extensions unverified. The Roborock 'QR 798 @ 3,103 DKK' digiexpert listing was eliminated in favour of the 3,929 DKK Elgiganten Roborock-authorized listing because non-authorized RMA friction undercuts the 'durability priority' criterion.",
+  "decision": "Pending — review scores in the decide UI and confirm or override."
+}

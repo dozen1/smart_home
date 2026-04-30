@@ -8,16 +8,16 @@ Budget: 2,000 DKK  ·  Stretch ceiling: 3,500 DKK
 
 ## Trade-off table
 
-| Option | Price (DKK) | Durability + parts/spares | Warranty length | Runtime sufficient for 63.2 m² | Weight + ergonomics | Suction on hard floor | User-replaceable battery | Toggle button (no constant trigger hold) | Current discount | Value for price | Score | Verdict |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **[Dyson V11 Advanced ★ STRETCH +970 DKK (click-in battery)](https://www.pricerunner.dk/pl/19-3319023611/Stoevsugere/Dyson-V11-Advanced-Sammenlign-Priser)** (+970 DKK over budget) | 2970 | 9 | 5 | 8 | 7 | 9 | 10 | 0 | 5 | 7 | 7.48 | ✅ pick |
-| [Electrolux 800 Ultimate EP83UB25SH ★ STRETCH +699 DKK](https://www.pricerunner.dk/pl/19-3411949250/Stoevsugere/Electrolux-800-Ultimate-Ledningsfri-Stoevsuger-EP83UB25SH-Sammenlign-Priser) (+699 DKK over budget) | 2699 | 8 | 5 | 7 | 6 | 7 | 7 | 10 | 7 | 7 | 7.22 |  |
-| [Dyson V8 Absolute (2023) ★ STRETCH +230 DKK](https://www.pricerunner.dk/pl/19-3157813/Stoevsugere/Dyson-V8-Absolute-Sammenlign-Priser) (+230 DKK over budget) | 2230 | 8 | 5 | 6 | 7 | 7 | 8 | 0 | 8 | 7 | 6.75 |  |
-| [Electrolux 700 Animal EP71AB14UG — flag: SKU appears retired](https://www.pricerunner.dk/pl/19-3205395302/Stoevsugere/Electrolux-Skaftdammsugare-EP71AB14UG-700-Sammenlign-Priser) | 1999 | 6 | 4 | 8 | 6 | 6 | 8 | 10 | 7 | 6 | 6.53 |  |
-| [Samsung Jet 75E Complete (VS20B75AGR5)](https://www.pricerunner.dk/pl/19-3308868798/Stoevsugere/Samsung-Jet-75E-Komplet-Sort-Sammenlign-Priser) | 1999 | 5 | 5 | 7 | 6 | 8 | 5 | 10 | 9 | 7 | 6.38 |  |
-| [Bosch Unlimited 9 BCS931WBA — same family that broke](https://www.pricerunner.dk/pl/19-3404510049/Stoevsugere/Bosch-BCS931WBA-Unlimited-9-Ledningsfri-Stoevsuger-Sammenlign-Priser) | 1899 | 4 | 5 | 5 | 6 | 6 | 7 | 10 | 9 | 6 | 5.75 |  |
-| [Samsung Jet 60 Turbo VS15A6031R4 — early failures reported](https://www.pricerunner.dk/pl/19-3393539100/Stoevsugere/Samsung-Samsung-Jet-60-Turbo-VS15A6031R4-Stoevsuger-Sammenlign-Priser) | 1548 | 4 | 5 | 5 | 7 | 5 | 4 | 10 | 6 | 6 | 5.28 |  |
-| [Xiaomi G20 — weakest DK parts pipeline](https://www.pricerunner.dk/pl/19-3378072264/Stoevsugere/Xiaomi-G20-EU-White-Sammenlign-Priser) | 1371 | 3 | 5 | 5 | 6 | 5 | 4 | 10 | 5 | 6 | 4.87 |  |
+| Option | Price (DKK) | Durability + parts/spares | Warranty length | Runtime sufficient for 63.2 m² | Weight + ergonomics | Suction on hard floor | User-replaceable battery | Toggle button (no constant trigger hold) | Current discount | Value for price | Wall-mount bracket included | Score | Verdict |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| **[Dyson V11 Advanced ★ STRETCH +970 DKK (click-in battery)](https://www.pricerunner.dk/pl/19-3319023611/Stoevsugere/Dyson-V11-Advanced-Sammenlign-Priser)** (+970 DKK over budget) | 2970 | 9 | 5 | 8 | 7 | 9 | 10 | 0 | 5 | 7 |  | 7.12 | ✅ pick |
+| [Electrolux 800 Ultimate EP83UB25SH ★ STRETCH +699 DKK](https://www.pricerunner.dk/pl/19-3411949250/Stoevsugere/Electrolux-800-Ultimate-Ledningsfri-Stoevsuger-EP83UB25SH-Sammenlign-Priser) (+699 DKK over budget) | 2699 | 8 | 5 | 7 | 6 | 7 | 7 | 10 | 7 | 7 |  | 6.88 |  |
+| [Dyson V8 Absolute (2023) ★ STRETCH +230 DKK](https://www.pricerunner.dk/pl/19-3157813/Stoevsugere/Dyson-V8-Absolute-Sammenlign-Priser) (+230 DKK over budget) | 2230 | 8 | 5 | 6 | 7 | 7 | 8 | 0 | 8 | 7 |  | 6.43 |  |
+| [Electrolux 700 Animal EP71AB14UG — flag: SKU appears retired](https://www.pricerunner.dk/pl/19-3205395302/Stoevsugere/Electrolux-Skaftdammsugare-EP71AB14UG-700-Sammenlign-Priser) | 1999 | 6 | 4 | 8 | 6 | 6 | 8 | 10 | 7 | 6 |  | 6.22 |  |
+| [Samsung Jet 75E Complete (VS20B75AGR5)](https://www.pricerunner.dk/pl/19-3308868798/Stoevsugere/Samsung-Jet-75E-Komplet-Sort-Sammenlign-Priser) | 1999 | 5 | 5 | 7 | 6 | 8 | 5 | 10 | 9 | 7 |  | 6.08 |  |
+| [Bosch Unlimited 9 BCS931WBA — same family that broke](https://www.pricerunner.dk/pl/19-3404510049/Stoevsugere/Bosch-BCS931WBA-Unlimited-9-Ledningsfri-Stoevsuger-Sammenlign-Priser) | 1899 | 4 | 5 | 5 | 6 | 6 | 7 | 10 | 9 | 6 |  | 5.48 |  |
+| [Samsung Jet 60 Turbo VS15A6031R4 — early failures reported](https://www.pricerunner.dk/pl/19-3393539100/Stoevsugere/Samsung-Samsung-Jet-60-Turbo-VS15A6031R4-Stoevsuger-Sammenlign-Priser) | 1548 | 4 | 5 | 5 | 7 | 5 | 4 | 10 | 6 | 6 |  | 5.03 |  |
+| [Xiaomi G20 — weakest DK parts pipeline](https://www.pricerunner.dk/pl/19-3378072264/Stoevsugere/Xiaomi-G20-EU-White-Sammenlign-Priser) | 1371 | 3 | 5 | 5 | 6 | 5 | 4 | 10 | 5 | 6 |  | 4.64 |  |
 
 ## Citations
 

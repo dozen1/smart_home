@@ -5,8 +5,7 @@ export function scoreWeighted(decision) {
     if (totalWeight <= 0) return { id: opt.id, name: opt.name, score: 0 };
     const sum = criteria.reduce((s, c) => {
       const raw = (opt.scores ?? {})[c.name] ?? 0;
-      const adjusted = c.lower_is_better ? (10 - raw) : raw;
-      return s + adjusted * (c.weight ?? 0);
+      return s + raw * (c.weight ?? 0);
     }, 0);
     return { id: opt.id, name: opt.name, score: sum / totalWeight };
   });

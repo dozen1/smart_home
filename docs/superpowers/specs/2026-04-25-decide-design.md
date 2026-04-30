@@ -61,9 +61,9 @@ docs/decisions/
 
 ### Weighted (default)
 
-- Each criterion has a `weight` (1–5) and an optional `lower_is_better` flag.
-- Each option has a `score` (0–10) per criterion.
-- Final score = `Σ ((lower_is_better ? (10 - score) : score) * weight) / Σ weight`.
+- Each criterion has a `weight` (1–5).
+- Each option has a `score` (0–10) per criterion. **Higher always means better** — for criteria where lower raw values are preferable (price, weight in kg), the user simply assigns the lightest/cheapest option a high score (closer to 10) when rating.
+- Final score = `Σ (score * weight) / Σ weight`.
 - Result is on the same **0–10 scale** as the inputs. The division by `Σ weight` is intentional: it keeps the score interpretable (e.g. "8.2 / 10") regardless of how many criteria or how high the weights run. Scores are meaningful for ranking *within* a decision; they are **not** meant to be compared across decisions with different criteria sets.
 - Ranked descending.
 
@@ -108,9 +108,9 @@ Save (`PUT`) is allowed with missing fields (work in progress). **Export (`POST 
   "method": "weighted",
   "baseline_option": null,
   "criteria": [
-    { "name": "Durability", "weight": 3, "lower_is_better": false },
-    { "name": "Price (DKK)", "weight": 2, "lower_is_better": true },
-    { "name": "Warranty (years)", "weight": 2, "lower_is_better": false }
+    { "name": "Durability", "weight": 3 },
+    { "name": "Price (DKK)", "weight": 2 },
+    { "name": "Warranty (years)", "weight": 2 }
   ],
   "options": [
     {

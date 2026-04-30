@@ -41,6 +41,10 @@
     {
       "name": "Value for price",
       "weight": 0.15
+    },
+    {
+      "name": "Wall-mount bracket included",
+      "weight": 0.05
     }
   ],
   "options": [

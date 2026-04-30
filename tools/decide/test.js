@@ -16,12 +16,12 @@ test('scoreWeighted: ranks options on a 0-10 scale, higher score wins', () => {
   const decision = {
     method: 'weighted',
     criteria: [
-      { name: 'Durability', weight: 3, lower_is_better: false },
-      { name: 'Price (DKK)', weight: 2, lower_is_better: true },
+      { name: 'Durability', weight: 3 },
+      { name: 'Lightness', weight: 2 },
     ],
     options: [
-      { id: 'a', name: 'A', scores: { 'Durability': 8, 'Price (DKK)': 4 } },
-      { id: 'b', name: 'B', scores: { 'Durability': 6, 'Price (DKK)': 2 } },
+      { id: 'a', name: 'A', scores: { 'Durability': 8, 'Lightness': 6 } },
+      { id: 'b', name: 'B', scores: { 'Durability': 6, 'Lightness': 8 } },
     ],
   };
   const ranked = scoreWeighted(decision);
@@ -32,10 +32,27 @@ test('scoreWeighted: ranks options on a 0-10 scale, higher score wins', () => {
   assert.equal(ranked[1].score.toFixed(2), '6.80');
 });
 
+test('scoreWeighted: ignores legacy lower_is_better flag (always treats 10 as best)', () => {
+  const decision = {
+    method: 'weighted',
+    criteria: [
+      { name: 'X', weight: 1, lower_is_better: true },
+    ],
+    options: [
+      { id: 'a', name: 'A', scores: { X: 9 } },
+      { id: 'b', name: 'B', scores: { X: 3 } },
+    ],
+  };
+  const ranked = scoreWeighted(decision);
+  assert.equal(ranked[0].id, 'a');
+  assert.equal(ranked[0].score, 9);
+  assert.equal(ranked[1].score, 3);
+});
+
 test('scoreWeighted: handles missing scores as 0', () => {
   const decision = {
     method: 'weighted',
-    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    criteria: [{ name: 'X', weight: 1 }],
     options: [{ id: 'a', name: 'A', scores: {} }],
   };
   const ranked = scoreWeighted(decision);
@@ -45,7 +62,7 @@ test('scoreWeighted: handles missing scores as 0', () => {
 test('scoreWeighted: zero total weight yields zero score, no NaN', () => {
   const decision = {
     method: 'weighted',
-    criteria: [{ name: 'X', weight: 0, lower_is_better: false }],
+    criteria: [{ name: 'X', weight: 0 }],
     options: [{ id: 'a', name: 'A', scores: { X: 9 } }],
   };
   const ranked = scoreWeighted(decision);
@@ -320,12 +337,12 @@ test('renderMarkdown: includes title, last-verified, citations, decision', () =>
     phase: 1,
     method: 'weighted',
     criteria: [
-      { name: 'Durability', weight: 3, lower_is_better: false },
-      { name: 'Price (DKK)', weight: 2, lower_is_better: true },
+      { name: 'Durability', weight: 3 },
+      { name: 'Price (DKK)', weight: 2 },
     ],
     options: [
-      { id: 'a', name: 'Roborock Q Revo Pro', price_dkk: 4999, retailer_url: 'https://www.proshop.dk/foo', excerpt: 'Pris 4.999 kr.', last_verified: '2026-04-25', scores: { 'Durability': 8, 'Price (DKK)': 4 } },
-      { id: 'b', name: 'Dreame L20 Ultra', price_dkk: 6499, retailer_url: 'https://www.elgiganten.dk/bar', excerpt: 'Pris 6.499 kr.', last_verified: '2026-04-24', scores: { 'Durability': 7, 'Price (DKK)': 6 } },
+      { id: 'a', name: 'Roborock Q Revo Pro', price_dkk: 4999, retailer_url: 'https://www.proshop.dk/foo', excerpt: 'Pris 4.999 kr.', last_verified: '2026-04-25', scores: { 'Durability': 8, 'Price (DKK)': 6 } },
+      { id: 'b', name: 'Dreame L20 Ultra', price_dkk: 6499, retailer_url: 'https://www.elgiganten.dk/bar', excerpt: 'Pris 6.499 kr.', last_verified: '2026-04-24', scores: { 'Durability': 7, 'Price (DKK)': 4 } },
     ],
     notes: 'On discount this week.',
     decision: 'Roborock Q Revo Pro',
@@ -346,7 +363,7 @@ test('renderMarkdown: includes title, last-verified, citations, decision', () =>
 test('renderMarkdown: shows "Pending" when no decision yet', () => {
   const md = renderMarkdown({
     slug: 's', title: 'T', phase: null, method: 'weighted',
-    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    criteria: [{ name: 'X', weight: 1 }],
     options: [{ id: 'a', name: 'A', price_dkk: 1, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
     notes: '', decision: null,
   });
@@ -401,7 +418,7 @@ test('server: export with missing required fields returns 422 listing them', asy
   await withServer(async (base) => {
     const decision = {
       slug: 'phase-1-vac', title: 'T', phase: 1, method: 'weighted',
-      criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+      criteria: [{ name: 'X', weight: 1 }],
       options: [{ id: 'a', name: 'A', price_dkk: null, retailer_url: '', excerpt: '', last_verified: null, scores: { X: 5 } }],
       notes: '', decision: null,
     };
@@ -419,7 +436,7 @@ test('server: export with valid data writes markdown and returns 200', async () 
     const today = new Date().toISOString().slice(0, 10);
     const decision = {
       slug: 'phase-1-vac', title: 'T', phase: 1, method: 'weighted',
-      criteria: [{ name: 'Durability', weight: 1, lower_is_better: false }],
+      criteria: [{ name: 'Durability', weight: 1 }],
       options: [{
         id: 'a', name: 'A',
         price_dkk: 4999, retailer_url: 'https://www.proshop.dk/foo', excerpt: 'Pris 4.999 kr.', last_verified: today,
@@ -448,7 +465,7 @@ test('server: serves /scoring.js from the package root', async () => {
 test('renderMarkdown: escapes pipes in option names so the table does not break', () => {
   const md = renderMarkdown({
     slug: 's', title: 'T', phase: null, method: 'weighted',
-    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    criteria: [{ name: 'X', weight: 1 }],
     options: [{ id: 'a', name: 'Foo | Bar', price_dkk: 1, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
     notes: '', decision: null,
   });
@@ -564,7 +581,7 @@ test('renderMarkdown: shows budget header line when budget_dkk set', () => {
   const md = renderMarkdown({
     slug: 'b', title: 'T', phase: 1, method: 'weighted',
     budget_dkk: 4000, stretch_ceiling_dkk: 4500,
-    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    criteria: [{ name: 'X', weight: 1 }],
     options: [{ id: 'a', name: 'A', price_dkk: 3000, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
     notes: '', decision: null,
   });
@@ -575,7 +592,7 @@ test('renderMarkdown: shows budget header line when budget_dkk set', () => {
 test('renderMarkdown: omits budget header when budget_dkk absent', () => {
   const md = renderMarkdown({
     slug: 'b', title: 'T', phase: 1, method: 'weighted',
-    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    criteria: [{ name: 'X', weight: 1 }],
     options: [{ id: 'a', name: 'A', price_dkk: 3000, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
     notes: '', decision: null,
   });
@@ -587,7 +604,7 @@ test('renderMarkdown: annotates option price exceeding budget but within stretch
   const md = renderMarkdown({
     slug: 'b', title: 'T', phase: 1, method: 'weighted',
     budget_dkk: 4000, stretch_ceiling_dkk: 4500,
-    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    criteria: [{ name: 'X', weight: 1 }],
     options: [{ id: 'a', name: 'Stretch pick', price_dkk: 4290, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
     notes: '', decision: null,
   });
@@ -598,7 +615,7 @@ test('renderMarkdown: annotates option price exceeding stretch ceiling', () => {
   const md = renderMarkdown({
     slug: 'b', title: 'T', phase: 1, method: 'weighted',
     budget_dkk: 4000, stretch_ceiling_dkk: 4500,
-    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    criteria: [{ name: 'X', weight: 1 }],
     options: [{ id: 'a', name: 'Too pricey', price_dkk: 5099, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
     notes: '', decision: null,
   });
@@ -609,7 +626,7 @@ test('renderMarkdown: does not annotate options at or under budget', () => {
   const md = renderMarkdown({
     slug: 'b', title: 'T', phase: 1, method: 'weighted',
     budget_dkk: 4000,
-    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    criteria: [{ name: 'X', weight: 1 }],
     options: [{ id: 'a', name: 'Under', price_dkk: 2206, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
     notes: '', decision: null,
   });
@@ -620,7 +637,7 @@ test('renderMarkdown: does not annotate options at or under budget', () => {
 test('renderMarkdown: option name is rendered as a markdown link to retailer_url', () => {
   const md = renderMarkdown({
     slug: 'b', title: 'T', phase: 1, method: 'weighted',
-    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    criteria: [{ name: 'X', weight: 1 }],
     options: [{ id: 'a', name: 'Linked', price_dkk: 100, retailer_url: 'https://example.dk/foo', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
     notes: '', decision: null,
   });

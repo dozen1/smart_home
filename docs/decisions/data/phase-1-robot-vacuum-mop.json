@@ -2,6 +2,8 @@
   "slug": "phase-1-robot-vacuum-mop",
   "title": "Phase 1 — Robot vacuum + mop",
   "phase": 1,
+  "budget_dkk": 4000,
+  "stretch_ceiling_dkk": 4500,
   "method": "weighted",
   "criteria": [
     { "name": "Durability + parts/spares", "weight": 0.22 },

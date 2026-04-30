@@ -27,6 +27,19 @@ function escapeMdLinkText(str) {
   return String(str ?? '').replace(/\]/g, '\\]').replace(/\r?\n/g, ' ');
 }
 
+function fmtDkk(n) {
+  return Number(n).toLocaleString('en-US') + ' DKK';
+}
+
+function budgetAnnotation(price, budget, ceiling) {
+  if (typeof budget !== 'number' || !Number.isFinite(budget)) return '';
+  if (price <= budget) return '';
+  if (typeof ceiling === 'number' && Number.isFinite(ceiling) && price > ceiling) {
+    return ` (+${(price - ceiling).toLocaleString('en-US')} DKK over stretch ceiling)`;
+  }
+  return ` (+${(price - budget).toLocaleString('en-US')} DKK over budget)`;
+}
+
 function escapeMdQuoted(str) {
   return String(str ?? '').replace(/"/g, '\\"').replace(/\r?\n/g, ' ');
 }
@@ -47,6 +60,15 @@ export function renderMarkdown(decision) {
   lines.push(`Phase: ${phase}  ·  Method: ${decision.method}`);
   lines.push('');
 
+  if (typeof decision.budget_dkk === 'number' && Number.isFinite(decision.budget_dkk)) {
+    const parts = [`Budget: ${fmtDkk(decision.budget_dkk)}`];
+    if (typeof decision.stretch_ceiling_dkk === 'number' && Number.isFinite(decision.stretch_ceiling_dkk)) {
+      parts.push(`Stretch ceiling: ${fmtDkk(decision.stretch_ceiling_dkk)}`);
+    }
+    lines.push(parts.join('  ·  '));
+    lines.push('');
+  }
+
   const criteria = decision.criteria ?? [];
   const header = ['Option', 'Price (DKK)', ...criteria.map((c) => escapeMdCell(c.name)), 'Score', 'Verdict'];
   const sep = header.map(() => '---');
@@ -58,8 +80,12 @@ export function renderMarkdown(decision) {
     const opt = decision.options.find((o) => o.id === r.id);
     if (!opt) continue;
     const safeName = escapeMdCell(opt.name);
+    const linkText = escapeMdLinkText(opt.name).replace(/\|/g, '\\|');
+    const annotation = budgetAnnotation(opt.price_dkk, decision.budget_dkk, decision.stretch_ceiling_dkk);
+    const linked = opt.retailer_url ? `[${linkText}](${opt.retailer_url})` : safeName;
+    const namedCell = (r.id === winnerId ? `**${linked}**` : linked) + escapeMdCell(annotation);
     const cells = [
-      r.id === winnerId ? `**${safeName}**` : safeName,
+      namedCell,
       String(opt.price_dkk),
       ...criteria.map((c) => {
         if (decision.method === 'pugh') return String(opt.pugh?.[c.name] ?? 0);

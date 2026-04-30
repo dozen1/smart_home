@@ -4,18 +4,20 @@ Last verified: 2026-04-26
 
 Phase: 1  ·  Method: weighted
 
+Budget: 2,000 DKK  ·  Stretch ceiling: 3,500 DKK
+
 ## Trade-off table
 
-| Option | Price (DKK) | Durability + parts/spares | Warranty length | Runtime sufficient for 63.2 m² | Weight + ergonomics | Suction on hard floor | User-replaceable battery | Current discount | Value for price | Score | Verdict |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **Dyson V11 Advanced ★ STRETCH +970 DKK (click-in battery)** | 2970 | 9 | 5 | 8 | 7 | 9 | 10 | 5 | 7 | 7.90 | ✅ pick |
-| Dyson V8 Absolute (2023) ★ STRETCH +230 DKK | 2230 | 8 | 5 | 6 | 7 | 7 | 8 | 8 | 7 | 7.15 |  |
-| Electrolux 800 Ultimate EP83UB25SH ★ STRETCH +699 DKK | 2699 | 8 | 5 | 7 | 6 | 7 | 7 | 7 | 7 | 7.00 |  |
-| Electrolux 700 Animal EP71AB14UG — flag: SKU appears retired | 1999 | 6 | 4 | 8 | 6 | 6 | 8 | 7 | 6 | 6.25 |  |
-| Samsung Jet 75E Complete (VS20B75AGR5) | 1999 | 5 | 5 | 7 | 6 | 8 | 5 | 9 | 7 | 6.10 |  |
-| Bosch Unlimited 9 BCS931WBA — same family that broke | 1899 | 4 | 5 | 5 | 6 | 6 | 7 | 9 | 6 | 5.45 |  |
-| Samsung Jet 60 Turbo VS15A6031R4 — early failures reported | 1548 | 4 | 5 | 5 | 7 | 5 | 4 | 6 | 6 | 5.00 |  |
-| Xiaomi G20 — weakest DK parts pipeline | 1371 | 3 | 5 | 5 | 6 | 5 | 4 | 5 | 6 | 4.55 |  |
+| Option | Price (DKK) | Durability + parts/spares | Warranty length | Runtime sufficient for 63.2 m² | Weight + ergonomics | Suction on hard floor | User-replaceable battery | Toggle button (no constant trigger hold) | Current discount | Value for price | Score | Verdict |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| **[Dyson V11 Advanced ★ STRETCH +970 DKK (click-in battery)](https://www.pricerunner.dk/pl/19-3319023611/Stoevsugere/Dyson-V11-Advanced-Sammenlign-Priser)** (+970 DKK over budget) | 2970 | 9 | 5 | 8 | 7 | 9 | 10 | 0 | 5 | 7 | 7.48 | ✅ pick |
+| [Electrolux 800 Ultimate EP83UB25SH ★ STRETCH +699 DKK](https://www.pricerunner.dk/pl/19-3411949250/Stoevsugere/Electrolux-800-Ultimate-Ledningsfri-Stoevsuger-EP83UB25SH-Sammenlign-Priser) (+699 DKK over budget) | 2699 | 8 | 5 | 7 | 6 | 7 | 7 | 10 | 7 | 7 | 7.22 |  |
+| [Dyson V8 Absolute (2023) ★ STRETCH +230 DKK](https://www.pricerunner.dk/pl/19-3157813/Stoevsugere/Dyson-V8-Absolute-Sammenlign-Priser) (+230 DKK over budget) | 2230 | 8 | 5 | 6 | 7 | 7 | 8 | 0 | 8 | 7 | 6.75 |  |
+| [Electrolux 700 Animal EP71AB14UG — flag: SKU appears retired](https://www.pricerunner.dk/pl/19-3205395302/Stoevsugere/Electrolux-Skaftdammsugare-EP71AB14UG-700-Sammenlign-Priser) | 1999 | 6 | 4 | 8 | 6 | 6 | 8 | 10 | 7 | 6 | 6.53 |  |
+| [Samsung Jet 75E Complete (VS20B75AGR5)](https://www.pricerunner.dk/pl/19-3308868798/Stoevsugere/Samsung-Jet-75E-Komplet-Sort-Sammenlign-Priser) | 1999 | 5 | 5 | 7 | 6 | 8 | 5 | 10 | 9 | 7 | 6.38 |  |
+| [Bosch Unlimited 9 BCS931WBA — same family that broke](https://www.pricerunner.dk/pl/19-3404510049/Stoevsugere/Bosch-BCS931WBA-Unlimited-9-Ledningsfri-Stoevsuger-Sammenlign-Priser) | 1899 | 4 | 5 | 5 | 6 | 6 | 7 | 10 | 9 | 6 | 5.75 |  |
+| [Samsung Jet 60 Turbo VS15A6031R4 — early failures reported](https://www.pricerunner.dk/pl/19-3393539100/Stoevsugere/Samsung-Samsung-Jet-60-Turbo-VS15A6031R4-Stoevsuger-Sammenlign-Priser) | 1548 | 4 | 5 | 5 | 7 | 5 | 4 | 10 | 6 | 6 | 5.28 |  |
+| [Xiaomi G20 — weakest DK parts pipeline](https://www.pricerunner.dk/pl/19-3378072264/Stoevsugere/Xiaomi-G20-EU-White-Sammenlign-Priser) | 1371 | 3 | 5 | 5 | 6 | 5 | 4 | 10 | 5 | 6 | 4.87 |  |
 
 ## Citations
 
@@ -58,6 +60,9 @@ Electrolux DK consumer site search for EP71AB14UG returns 'ingen resultater' →
 1. Dyson DK warranty length on the chosen V-series unit (target 2 yr standard, sometimes 5 yr motor on registration). Dyson DK garanti page returned 404 in research.
 2. Electrolux 800 Ultimate EP83UB25SH battery user-replaceability + battery part #.
 3. Trustpilot DK and Reddit r/dyson 1+ year ownership reports — open these in a normal browser before commit; this research session was bot-walled.
+
+## Trigger-hold ergonomics (new criterion)
+Dyson V8 and V11 use a squeeze-to-run trigger you must hold continuously while vacuuming — long-standing complaint vs hand fatigue, especially over 60+ m². Samsung Jet, Electrolux 700/800 Ultimate, Bosch Unlimited 9, and Xiaomi G20 all use a press-once toggle / power button. This is a real ergonomic counterweight to Dyson V11/V8 durability advantages.
 
 ## Decision
 

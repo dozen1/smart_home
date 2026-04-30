@@ -4,18 +4,20 @@ Last verified: 2026-04-26
 
 Phase: 1  ·  Method: weighted
 
+Budget: 4,000 DKK  ·  Stretch ceiling: 4,500 DKK
+
 ## Trade-off table
 
 | Option | Price (DKK) | Durability + parts/spares | Warranty length | Discount vs MSRP | Value for price | Dock fits ≤60 cm + clearances | Threshold clearance ≥22 mm | Mop tech laminate-safe | Matter / ecosystem flexibility | Suction + navigation | Score | Verdict |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **Roborock Qrevo Curv ★ STRETCH +290 DKK** | 4290 | 8 | 5 | 5 | 7 | 7 | 10 | 6 | 4 | 9 | 7.01 | ✅ pick |
-| MOVA E30 Ultra (Dreame sub-brand) | 2206 | 6 | 5 | 7 | 10 | 6 | 5 | 6 | 3 | 8 | 6.35 |  |
-| Ecovacs Deebot X9 Pro Omni ★ STRETCH +339 DKK (Matter) | 4339 | 5 | 5 | 7 | 6 | 6 | 5 | 9 | 9 | 8 | 6.25 |  |
-| Dreame L10s Pro Gen 2 — charge-only dock | 1569 | 7 | 5 | 5 | 5 | 8 | 4 | 4 | 3 | 6 | 5.73 |  |
-| Ecovacs Deebot N30 Pro Omni | 2999 | 5 | 5 | 5 | 6 | 5 | 4 | 5 | 3 | 6 | 4.97 |  |
-| Ecovacs Deebot N20 Plus — auto-empty only | 1929 | 5 | 5 | 5 | 6 | 5 | 4 | 4 | 3 | 5 | 4.82 |  |
-| Ecovacs Deebot X8 Omni — at budget cap, same family | 3999 | 4 | 5 | 8 | 4 | 4 | 4 | 4 | 3 | 8 | 4.63 |  |
-| Ecovacs Deebot T80 Omni — durability red flags | 3699 | 3 | 5 | 9 | 4 | 4 | 4 | 4 | 3 | 8 | 4.51 |  |
+| **[Roborock Qrevo Curv ★ STRETCH +290 DKK](https://www.pricerunner.dk/pl/1613-3389491210/Robotstoevsugere/Roborock-Qrevo-Curv-Hvid-Sammenlign-Priser)** (+290 DKK over budget) | 4290 | 8 | 5 | 5 | 7 | 7 | 10 | 6 | 4 | 9 | 7.01 | ✅ pick |
+| [MOVA E30 Ultra (Dreame sub-brand)](https://www.pricerunner.dk/pl/1613-3332197665/Robotstoevsugere/Mova-E30-Ultra-RLE51SE-Hvid-Sammenlign-Priser) | 2206 | 6 | 5 | 7 | 10 | 6 | 5 | 6 | 3 | 8 | 6.35 |  |
+| [Ecovacs Deebot X9 Pro Omni ★ STRETCH +339 DKK (Matter)](https://www.pricerunner.dk/pl/1613-3411770033/Robotstoevsugere/Ecovacs-Deebot-X9-Pro-Omni-Sort-Sammenlign-Priser) (+339 DKK over budget) | 4339 | 5 | 5 | 7 | 6 | 6 | 5 | 9 | 9 | 8 | 6.25 |  |
+| [Dreame L10s Pro Gen 2 — charge-only dock](https://www.pricerunner.dk/search?q=robotst%C3%B8vsuger+mop) | 1569 | 7 | 5 | 5 | 5 | 8 | 4 | 4 | 3 | 6 | 5.73 |  |
+| [Ecovacs Deebot N30 Pro Omni](https://www.pricerunner.dk/pl/1613-3381822316/Robotstoevsugere/Ecovacs-N30-Pro-Omni-Package-Weiss-Sammenlign-Priser) | 2999 | 5 | 5 | 5 | 6 | 5 | 4 | 5 | 3 | 6 | 4.97 |  |
+| [Ecovacs Deebot N20 Plus — auto-empty only](https://www.pricerunner.dk/pl/1613-3329882934/Robotstoevsugere/Ecovacs-Deebot-N20-Plus-Hvid-Sammenlign-Priser) | 1929 | 5 | 5 | 5 | 6 | 5 | 4 | 4 | 3 | 5 | 4.82 |  |
+| [Ecovacs Deebot X8 Omni — at budget cap, same family](https://www.pricerunner.dk/pl/1613-3393666152/Robotstoevsugere/Ecovacs-Deebot-X8-Omni-Sammenlign-Priser) | 3999 | 4 | 5 | 8 | 4 | 4 | 4 | 4 | 3 | 8 | 4.63 |  |
+| [Ecovacs Deebot T80 Omni — durability red flags](https://www.pricerunner.dk/pl/1613-3403671269/Robotstoevsugere/Ecovacs-Deebot-T80-Omni-Schwarz-Sammenlign-Priser) | 3699 | 3 | 5 | 9 | 4 | 4 | 4 | 4 | 3 | 8 | 4.51 |  |
 
 ## Citations
 

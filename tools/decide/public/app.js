@@ -68,6 +68,8 @@ async function save() {
   state.decision.title = title;
   state.decision.slug = slug;
   state.decision.phase = $('#phase').value ? parseInt($('#phase').value, 10) : null;
+  state.decision.budget_dkk = $('#budget').value ? +$('#budget').value : null;
+  state.decision.stretch_ceiling_dkk = $('#stretch-ceiling').value ? +$('#stretch-ceiling').value : null;
   state.decision.notes = $('#notes').value;
   state.decision.decision = $('#decision-text').value || null;
   const r = await fetch(`/api/decisions/${encodeURIComponent(slug)}`, {
@@ -291,6 +293,8 @@ function renderEditor() {
   $('#title').value = state.decision.title ?? '';
   $('#method').value = state.decision.method ?? 'weighted';
   $('#phase').value = state.decision.phase ?? '';
+  $('#budget').value = state.decision.budget_dkk ?? '';
+  $('#stretch-ceiling').value = state.decision.stretch_ceiling_dkk ?? '';
   $('#notes').value = state.decision.notes ?? '';
   $('#decision-text').value = state.decision.decision ?? '';
   renderCriteria();
@@ -314,6 +318,8 @@ $('#add-option').addEventListener('click', () => {
 $('#method').addEventListener('change', (e) => { if (state.decision) { state.decision.method = e.target.value; renderEditor(); } });
 $('#title').addEventListener('input', (e) => { if (state.decision) state.decision.title = e.target.value; });
 $('#phase').addEventListener('input', (e) => { if (state.decision) state.decision.phase = e.target.value ? +e.target.value : null; });
+$('#budget').addEventListener('input', (e) => { if (state.decision) state.decision.budget_dkk = e.target.value ? +e.target.value : null; });
+$('#stretch-ceiling').addEventListener('input', (e) => { if (state.decision) state.decision.stretch_ceiling_dkk = e.target.value ? +e.target.value : null; });
 $('#notes').addEventListener('input', (e) => { if (state.decision) state.decision.notes = e.target.value; });
 $('#decision-text').addEventListener('input', (e) => { if (state.decision) state.decision.decision = e.target.value || null; });
 

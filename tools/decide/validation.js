@@ -104,3 +104,28 @@ export function validatePairwiseCompleteness(decision) {
   }
   return errors.length === 0 ? { ok: true } : { ok: false, errors };
 }
+
+function isPositiveFiniteNumber(v) {
+  return typeof v === 'number' && Number.isFinite(v) && v >= 0;
+}
+
+export function validateBudget(decision) {
+  const errors = [];
+  const hasBudget = decision.budget_dkk !== undefined && decision.budget_dkk !== null;
+  const hasCeiling = decision.stretch_ceiling_dkk !== undefined && decision.stretch_ceiling_dkk !== null;
+  if (hasBudget && !isPositiveFiniteNumber(decision.budget_dkk)) {
+    errors.push('budget_dkk must be a finite number >= 0');
+  }
+  if (hasCeiling && !isPositiveFiniteNumber(decision.stretch_ceiling_dkk)) {
+    errors.push('stretch_ceiling_dkk must be a finite number >= 0');
+  }
+  if (
+    hasBudget && hasCeiling &&
+    isPositiveFiniteNumber(decision.budget_dkk) &&
+    isPositiveFiniteNumber(decision.stretch_ceiling_dkk) &&
+    decision.stretch_ceiling_dkk < decision.budget_dkk
+  ) {
+    errors.push('stretch_ceiling_dkk must be >= budget_dkk');
+  }
+  return errors.length === 0 ? { ok: true } : { ok: false, errors };
+}

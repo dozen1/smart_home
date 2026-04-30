@@ -7,6 +7,7 @@ import {
   validateRetailerUrl,
   validateOption,
   validatePairwiseCompleteness,
+  validateBudget,
 } from './validation.js';
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -333,8 +334,8 @@ test('renderMarkdown: includes title, last-verified, citations, decision', () =>
   assert.match(md, /Last verified: 2026-04-25/);
   assert.match(md, /Phase: 1/);
   assert.match(md, /Method: weighted/);
-  assert.match(md, /\| \*\*Roborock Q Revo Pro\*\* \|/);
-  assert.match(md, /\| Dreame L20 Ultra \|/);
+  assert.match(md, /\| \*\*\[Roborock Q Revo Pro\]\(https:\/\/www\.proshop\.dk\/foo\)\*\* \|/);
+  assert.match(md, /\| \[Dreame L20 Ultra\]\(https:\/\/www\.elgiganten\.dk\/bar\) \|/);
   assert.match(md, /✅ pick/);
   assert.match(md, /\[proshop\.dk\]\(https:\/\/www\.proshop\.dk\/foo\)/);
   assert.match(md, /"Pris 4\.999 kr\."/);
@@ -515,4 +516,114 @@ test('validateRetailerUrl: blocks IPv6 unspecified ::', () => {
 test('validateRetailerUrl: still accepts a normal pricerunner.dk URL', () => {
   const r = validateRetailerUrl('https://www.pricerunner.dk/pl/19-3308868798/Stoevsugere/Foo');
   assert.equal(r.ok, true);
+});
+
+// --- Budget feature -----------------------------------------------------
+
+test('validateBudget: accepts both fields omitted', () => {
+  const r = validateBudget({});
+  assert.equal(r.ok, true);
+});
+
+test('validateBudget: accepts positive budget_dkk only', () => {
+  const r = validateBudget({ budget_dkk: 4000 });
+  assert.equal(r.ok, true);
+});
+
+test('validateBudget: accepts both fields with budget <= ceiling', () => {
+  const r = validateBudget({ budget_dkk: 4000, stretch_ceiling_dkk: 4500 });
+  assert.equal(r.ok, true);
+});
+
+test('validateBudget: rejects negative budget', () => {
+  const r = validateBudget({ budget_dkk: -1 });
+  assert.equal(r.ok, false);
+});
+
+test('validateBudget: rejects non-finite budget', () => {
+  const r = validateBudget({ budget_dkk: Number.POSITIVE_INFINITY });
+  assert.equal(r.ok, false);
+});
+
+test('validateBudget: rejects non-number budget', () => {
+  const r = validateBudget({ budget_dkk: '4000' });
+  assert.equal(r.ok, false);
+});
+
+test('validateBudget: rejects ceiling less than budget', () => {
+  const r = validateBudget({ budget_dkk: 4000, stretch_ceiling_dkk: 3000 });
+  assert.equal(r.ok, false);
+});
+
+test('validateBudget: rejects negative ceiling', () => {
+  const r = validateBudget({ stretch_ceiling_dkk: -100 });
+  assert.equal(r.ok, false);
+});
+
+test('renderMarkdown: shows budget header line when budget_dkk set', () => {
+  const md = renderMarkdown({
+    slug: 'b', title: 'T', phase: 1, method: 'weighted',
+    budget_dkk: 4000, stretch_ceiling_dkk: 4500,
+    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    options: [{ id: 'a', name: 'A', price_dkk: 3000, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
+    notes: '', decision: null,
+  });
+  assert.match(md, /Budget: 4,000 DKK/);
+  assert.match(md, /Stretch ceiling: 4,500 DKK/);
+});
+
+test('renderMarkdown: omits budget header when budget_dkk absent', () => {
+  const md = renderMarkdown({
+    slug: 'b', title: 'T', phase: 1, method: 'weighted',
+    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    options: [{ id: 'a', name: 'A', price_dkk: 3000, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
+    notes: '', decision: null,
+  });
+  assert.doesNotMatch(md, /Budget: /);
+  assert.doesNotMatch(md, /Stretch ceiling: /);
+});
+
+test('renderMarkdown: annotates option price exceeding budget but within stretch', () => {
+  const md = renderMarkdown({
+    slug: 'b', title: 'T', phase: 1, method: 'weighted',
+    budget_dkk: 4000, stretch_ceiling_dkk: 4500,
+    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    options: [{ id: 'a', name: 'Stretch pick', price_dkk: 4290, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
+    notes: '', decision: null,
+  });
+  assert.match(md, /\+290 DKK over budget/);
+});
+
+test('renderMarkdown: annotates option price exceeding stretch ceiling', () => {
+  const md = renderMarkdown({
+    slug: 'b', title: 'T', phase: 1, method: 'weighted',
+    budget_dkk: 4000, stretch_ceiling_dkk: 4500,
+    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    options: [{ id: 'a', name: 'Too pricey', price_dkk: 5099, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
+    notes: '', decision: null,
+  });
+  assert.match(md, /over stretch ceiling/);
+});
+
+test('renderMarkdown: does not annotate options at or under budget', () => {
+  const md = renderMarkdown({
+    slug: 'b', title: 'T', phase: 1, method: 'weighted',
+    budget_dkk: 4000,
+    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    options: [{ id: 'a', name: 'Under', price_dkk: 2206, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
+    notes: '', decision: null,
+  });
+  assert.doesNotMatch(md, /over budget/);
+  assert.doesNotMatch(md, /over stretch ceiling/);
+});
+
+test('renderMarkdown: option name is rendered as a markdown link to retailer_url', () => {
+  const md = renderMarkdown({
+    slug: 'b', title: 'T', phase: 1, method: 'weighted',
+    criteria: [{ name: 'X', weight: 1, lower_is_better: false }],
+    options: [{ id: 'a', name: 'Linked', price_dkk: 100, retailer_url: 'https://example.dk/foo', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
+    notes: '', decision: null,
+  });
+  // link must appear in trade-off table row (not just citations)
+  assert.match(md, /\| \*\*\[Linked\]\(https:\/\/example\.dk\/foo\)\*\* \|/);
 });

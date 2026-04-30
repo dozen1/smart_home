@@ -2,16 +2,46 @@
   "slug": "phase-1-stick-vacuum",
   "title": "Phase 1 — Cordless stick vacuum (Bosch Unlimited 7 replacement)",
   "phase": 1,
+  "budget_dkk": 2000,
+  "stretch_ceiling_dkk": 3500,
   "method": "weighted",
   "criteria": [
-    { "name": "Durability + parts/spares", "weight": 0.30 },
-    { "name": "Warranty length", "weight": 0.10 },
-    { "name": "Runtime sufficient for 63.2 m²", "weight": 0.10 },
-    { "name": "Weight + ergonomics", "weight": 0.10 },
-    { "name": "Suction on hard floor", "weight": 0.10 },
-    { "name": "User-replaceable battery", "weight": 0.10 },
-    { "name": "Current discount", "weight": 0.05 },
-    { "name": "Value for price", "weight": 0.15 }
+    {
+      "name": "Durability + parts/spares",
+      "weight": 0.28
+    },
+    {
+      "name": "Warranty length",
+      "weight": 0.08
+    },
+    {
+      "name": "Runtime sufficient for 63.2 m²",
+      "weight": 0.1
+    },
+    {
+      "name": "Weight + ergonomics",
+      "weight": 0.08
+    },
+    {
+      "name": "Suction on hard floor",
+      "weight": 0.1
+    },
+    {
+      "name": "User-replaceable battery",
+      "weight": 0.1
+    },
+    {
+      "name": "Toggle button (no constant trigger hold)",
+      "weight": 0.06
+    },
+    {
+      "name": "Current discount",
+      "weight": 0.05
+    },
+    {
+      "name": "Value for price",
+      "weight": 0.15
+    }
   ],
   "options": [
     {
@@ -29,7 +59,8 @@
         "Suction on hard floor": 8,
         "User-replaceable battery": 5,
         "Current discount": 9,
-        "Value for price": 7
+        "Value for price": 7,
+        "Toggle button (no constant trigger hold)": 10
       }
     },
     {
@@ -47,7 +78,8 @@
         "Suction on hard floor": 6,
         "User-replaceable battery": 8,
         "Current discount": 7,
-        "Value for price": 6
+        "Value for price": 6,
+        "Toggle button (no constant trigger hold)": 10
       }
     },
     {
@@ -65,7 +97,8 @@
         "Suction on hard floor": 5,
         "User-replaceable battery": 4,
         "Current discount": 6,
-        "Value for price": 6
+        "Value for price": 6,
+        "Toggle button (no constant trigger hold)": 10
       }
     },
     {
@@ -83,7 +116,8 @@
         "Suction on hard floor": 6,
         "User-replaceable battery": 7,
         "Current discount": 9,
-        "Value for price": 6
+        "Value for price": 6,
+        "Toggle button (no constant trigger hold)": 10
       }
     },
     {
@@ -101,7 +135,8 @@
         "Suction on hard floor": 5,
         "User-replaceable battery": 4,
         "Current discount": 5,
-        "Value for price": 6
+        "Value for price": 6,
+        "Toggle button (no constant trigger hold)": 10
       }
     },
     {
@@ -119,7 +154,8 @@
         "Suction on hard floor": 7,
         "User-replaceable battery": 7,
         "Current discount": 7,
-        "Value for price": 7
+        "Value for price": 7,
+        "Toggle button (no constant trigger hold)": 10
       }
     },
     {
@@ -137,7 +173,8 @@
         "Suction on hard floor": 9,
         "User-replaceable battery": 10,
         "Current discount": 5,
-        "Value for price": 7
+        "Value for price": 7,
+        "Toggle button (no constant trigger hold)": 0
       }
     },
     {
@@ -155,10 +192,11 @@
         "Suction on hard floor": 7,
         "User-replaceable battery": 8,
         "Current discount": 8,
-        "Value for price": 7
+        "Value for price": 7,
+        "Toggle button (no constant trigger hold)": 0
       }
     }
   ],
-  "notes": "## Buyer's failure data\nBosch Unlimited 7 (PowerForAll 18V platform) broke after 3 years of heavy use. Trigger / motor-bearing / battery-controller PCB are the documented failure modes for this architecture, and they are architectural — not generation-specific. Bosch Unlimited 9 / Serie 6 share the same platform → durability scores reflect inherited risk despite the steep discount.\n\n## Why Samsung sub-2k sit lower than the previous version of this doc\nReddit r/VacuumCleaners surfaced concrete sub-12-month failure reports for Samsung Jet platform after that ranking was set:\n- Jet 75 brushroll motor failure at 6 mo (https://www.reddit.com/r/VacuumCleaners/comments/1ig1dmg/)\n- Jet 60 Turbo power-mode regulation fault at 6 mo (https://www.reddit.com/r/VacuumCleaners/comments/1p5c0o1/)\nSamsung DK manufacturer pages, search API, Trustpilot DK and Pricerunner DK product pages all blocked our research session, so the warranty/parts continuity counter-evidence is missing — these scores are conservative until that gap is closed by a manual browser check.\n\n## Why Electrolux 700 Animal sits lower than the previous version\nElectrolux DK consumer site search for EP71AB14UG returns 'ingen resultater' → the SKU appears RETIRED from Electrolux's current catalogue, even though parts still ship from shop.electrolux.dk. Buying an EOL SKU on clearance trades short-term price for missing future firmware/manufacturer support. The Electrolux 800 Ultimate EP83UB25SH (stretch +699 kr) is the active replacement product line on the same parts pipeline.\n\n## Stretch options\n**Stretch pick #1 — Dyson V11 Advanced (2,970 kr, +970):** the click-in user-replaceable battery is the single feature that directly addresses the buyer's failure mode (battery fade in cordless sticks). 9-year-old platform = mature parts ecosystem (iFixit V11 hub).\n\n**Stretch pick #2 — Electrolux 800 Ultimate EP83UB25SH (2,699 kr, +699):** half the V11 premium, on a verified active parts pipeline (shop.electrolux.dk + AEG QX9 sibling). PR rating 4.5★. Battery user-replaceability needs in-store confirmation.\n\n**Stretch consider — Dyson V8 Absolute (2,230 kr, +230):** cheapest stretch, oldest gen but very mature support.\n\n## Avoid\n- **Dyson V12 Origin (3,179 kr, +1,179):** premium pays for laser-detect + particle-count features irrelevant for spot-cleaning a 63 m² hard-floor home with no pets.\n- **Bosch Unlimited 7 BBS711… (~2,300 kr):** above budget AND the exact family that just broke.\n- **Miele Triflex HX1/HX2 (~4,500-5,000 kr):** durability king on paper, but well over stretch ceiling.\n\n## Hard verifications still needed before purchase\n1. Dyson DK warranty length on the chosen V-series unit (target 2 yr standard, sometimes 5 yr motor on registration). Dyson DK garanti page returned 404 in research.\n2. Electrolux 800 Ultimate EP83UB25SH battery user-replaceability + battery part #.\n3. Trustpilot DK and Reddit r/dyson 1+ year ownership reports — open these in a normal browser before commit; this research session was bot-walled.",
+  "notes": "## Buyer's failure data\nBosch Unlimited 7 (PowerForAll 18V platform) broke after 3 years of heavy use. Trigger / motor-bearing / battery-controller PCB are the documented failure modes for this architecture, and they are architectural — not generation-specific. Bosch Unlimited 9 / Serie 6 share the same platform → durability scores reflect inherited risk despite the steep discount.\n\n## Why Samsung sub-2k sit lower than the previous version of this doc\nReddit r/VacuumCleaners surfaced concrete sub-12-month failure reports for Samsung Jet platform after that ranking was set:\n- Jet 75 brushroll motor failure at 6 mo (https://www.reddit.com/r/VacuumCleaners/comments/1ig1dmg/)\n- Jet 60 Turbo power-mode regulation fault at 6 mo (https://www.reddit.com/r/VacuumCleaners/comments/1p5c0o1/)\nSamsung DK manufacturer pages, search API, Trustpilot DK and Pricerunner DK product pages all blocked our research session, so the warranty/parts continuity counter-evidence is missing — these scores are conservative until that gap is closed by a manual browser check.\n\n## Why Electrolux 700 Animal sits lower than the previous version\nElectrolux DK consumer site search for EP71AB14UG returns 'ingen resultater' → the SKU appears RETIRED from Electrolux's current catalogue, even though parts still ship from shop.electrolux.dk. Buying an EOL SKU on clearance trades short-term price for missing future firmware/manufacturer support. The Electrolux 800 Ultimate EP83UB25SH (stretch +699 kr) is the active replacement product line on the same parts pipeline.\n\n## Stretch options\n**Stretch pick #1 — Dyson V11 Advanced (2,970 kr, +970):** the click-in user-replaceable battery is the single feature that directly addresses the buyer's failure mode (battery fade in cordless sticks). 9-year-old platform = mature parts ecosystem (iFixit V11 hub).\n\n**Stretch pick #2 — Electrolux 800 Ultimate EP83UB25SH (2,699 kr, +699):** half the V11 premium, on a verified active parts pipeline (shop.electrolux.dk + AEG QX9 sibling). PR rating 4.5★. Battery user-replaceability needs in-store confirmation.\n\n**Stretch consider — Dyson V8 Absolute (2,230 kr, +230):** cheapest stretch, oldest gen but very mature support.\n\n## Avoid\n- **Dyson V12 Origin (3,179 kr, +1,179):** premium pays for laser-detect + particle-count features irrelevant for spot-cleaning a 63 m² hard-floor home with no pets.\n- **Bosch Unlimited 7 BBS711… (~2,300 kr):** above budget AND the exact family that just broke.\n- **Miele Triflex HX1/HX2 (~4,500-5,000 kr):** durability king on paper, but well over stretch ceiling.\n\n## Hard verifications still needed before purchase\n1. Dyson DK warranty length on the chosen V-series unit (target 2 yr standard, sometimes 5 yr motor on registration). Dyson DK garanti page returned 404 in research.\n2. Electrolux 800 Ultimate EP83UB25SH battery user-replaceability + battery part #.\n3. Trustpilot DK and Reddit r/dyson 1+ year ownership reports — open these in a normal browser before commit; this research session was bot-walled.\n\n## Trigger-hold ergonomics (new criterion)\nDyson V8 and V11 use a squeeze-to-run trigger you must hold continuously while vacuuming — long-standing complaint vs hand fatigue, especially over 60+ m². Samsung Jet, Electrolux 700/800 Ultimate, Bosch Unlimited 9, and Xiaomi G20 all use a press-once toggle / power button. This is a real ergonomic counterweight to Dyson V11/V8 durability advantages.",
   "decision": "Pending — review scores in the decide UI. Strong tilt toward stretch picks given durability-first priority; finalize after manual Trustpilot/Reddit browser check."
 }

@@ -126,7 +126,6 @@ function renderCriteria() {
     tr.innerHTML = `
       <td><input data-i="${i}" data-k="name" value="${escapeHtml(c.name)}" /></td>
       <td><input data-i="${i}" data-k="weight" type="number" min="1" max="5" value="${c.weight ?? 1}" /></td>
-      <td><input data-i="${i}" data-k="lower_is_better" type="checkbox" ${c.lower_is_better ? 'checked' : ''} /></td>
       <td><button data-i="${i}" data-action="remove-criterion">×</button></td>
     `;
     tbody.appendChild(tr);
@@ -318,7 +317,7 @@ $('#save').addEventListener('click', save);
 $('#export').addEventListener('click', exportMarkdown);
 $('#add-criterion').addEventListener('click', () => {
   state.decision ??= emptyDecision();
-  state.decision.criteria.push({ name: '', weight: 1, lower_is_better: false });
+  state.decision.criteria.push({ name: '', weight: 1 });
   renderEditor();
 });
 $('#add-option').addEventListener('click', () => {

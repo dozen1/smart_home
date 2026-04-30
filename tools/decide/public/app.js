@@ -108,6 +108,16 @@ function escapeHtml(str) {
   ));
 }
 
+function priceText(o) {
+  if (o == null || o.price_dkk == null || o.price_dkk === '') return '';
+  return ` (${Number(o.price_dkk).toLocaleString('da-DK')} DKK)`;
+}
+
+function priceHtml(o) {
+  const t = priceText(o);
+  return t ? ` <span class="price">${escapeHtml(t.trim())}</span>` : '';
+}
+
 function renderCriteria() {
   const tbody = $('#criteria-table tbody');
   tbody.innerHTML = '';
@@ -183,7 +193,7 @@ function buildWeightedPanel() {
     const cells = state.decision.criteria.map((c) =>
       `<td><input data-i="${i}" data-c="${escapeHtml(c.name)}" type="number" min="0" max="10" value="${o.scores?.[c.name] ?? ''}" /></td>`).join('');
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${escapeHtml(o.name) || '(unnamed)'}</td>${cells}`;
+    tr.innerHTML = `<td>${escapeHtml(o.name) || '(unnamed)'}${priceHtml(o)}</td>${cells}`;
     tbody.appendChild(tr);
   });
   tbl.appendChild(tbody);
@@ -202,7 +212,7 @@ function buildPughPanel() {
   const wrap = document.createElement('div');
   const picker = document.createElement('label');
   picker.innerHTML = `Baseline: <select id="baseline">${
-    state.decision.options.map((o) => `<option value="${o.id}" ${state.decision.baseline_option === o.id ? 'selected' : ''}>${escapeHtml(o.name) || o.id}</option>`).join('')
+    state.decision.options.map((o) => `<option value="${o.id}" ${state.decision.baseline_option === o.id ? 'selected' : ''}>${escapeHtml((o.name || o.id) + priceText(o))}</option>`).join('')
   }</select>`;
   wrap.appendChild(picker);
   picker.querySelector('select').addEventListener('change', (e) => {
@@ -214,7 +224,7 @@ function buildPughPanel() {
   const tbody = document.createElement('tbody');
   state.decision.options.forEach((o, i) => {
     if (o.id === state.decision.baseline_option) {
-      tbody.innerHTML += `<tr><td>${escapeHtml(o.name)} (baseline)</td>${state.decision.criteria.map(() => '<td>0</td>').join('')}</tr>`;
+      tbody.innerHTML += `<tr><td>${escapeHtml(o.name)}${priceHtml(o)} (baseline)</td>${state.decision.criteria.map(() => '<td>0</td>').join('')}</tr>`;
       return;
     }
     const cells = state.decision.criteria.map((c) =>
@@ -223,7 +233,7 @@ function buildPughPanel() {
         <option value="0" ${(o.pugh?.[c.name] ?? 0) === 0 ? 'selected' : ''}>=</option>
         <option value="1" ${o.pugh?.[c.name] === 1 ? 'selected' : ''}>+</option>
       </select></td>`).join('');
-    tbody.innerHTML += `<tr><td>${escapeHtml(o.name) || '(unnamed)'}</td>${cells}</tr>`;
+    tbody.innerHTML += `<tr><td>${escapeHtml(o.name) || '(unnamed)'}${priceHtml(o)}</td>${cells}</tr>`;
   });
   tbl.appendChild(tbody);
   wrap.appendChild(tbl);
@@ -255,7 +265,7 @@ function buildPairwisePanel() {
         const stored = a.pairwise?.[c.name]?.[b.id] ?? 1;
         const row = document.createElement('label');
         row.style.display = 'flex'; row.style.gap = '6px';
-        row.innerHTML = `${escapeHtml(a.name) || a.id} vs ${escapeHtml(b.name) || b.id}:
+        row.innerHTML = `${escapeHtml(a.name) || a.id}${priceHtml(a)} vs ${escapeHtml(b.name) || b.id}${priceHtml(b)}:
           <select data-aid="${a.id}" data-bid="${b.id}" data-c="${escapeHtml(c.name)}">
             ${[1/9, 1/7, 1/5, 1/3, 1, 3, 5, 7, 9].map((v) => `<option value="${v}" ${Math.abs(v - stored) < 1e-6 ? 'selected' : ''}>${v < 1 ? `1/${Math.round(1/v)}` : v}</option>`).join('')}
           </select>`;
@@ -283,7 +293,8 @@ function renderRanking() {
   for (const r of ranked) {
     const li = document.createElement('li');
     const score = state.decision.method === 'pugh' ? r.score : r.score.toFixed(2);
-    li.textContent = `${r.name || r.id} — ${score}`;
+    const opt = state.decision.options.find((o) => o.id === r.id);
+    li.textContent = `${r.name || r.id}${priceText(opt)} — ${score}`;
     ol.appendChild(li);
   }
 }

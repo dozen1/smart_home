@@ -26,3 +26,4 @@ input, textarea, select { font: inherit; border: 1px solid #cbd5e1; border-radiu
 #status { color: #444; min-height: 1em; }
 #status.error { color: #b91c1c; }
 #status.ok { color: #166534; }
+.price { color: #64748b; font-weight: normal; font-size: 0.9em; white-space: nowrap; }

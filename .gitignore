@@ -1,5 +1,9 @@
 .DS_Store
+
+# Local MCP server configs (contain absolute nvm paths)
+.mcp.json
 .vscode/mcp.json
+
 node_modules/
 .env
 .env.*

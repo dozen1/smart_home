@@ -73,12 +73,26 @@ README.md
 
 The set of available MCP servers depends on the session (VS Code Copilot Chat vs. Copilot CLI vs. GitHub.com). Capabilities to use when present:
 
-| Server                | Purpose                                                                |
-| --------------------- | ---------------------------------------------------------------------- |
-| `github`              | GitHub API — PRs, issues, file reads, search, branches                 |
-| `sequential-thinking` | Structured reasoning for multi-step decisions and trade-off analysis   |
-| `context7`            | Up-to-date library / framework docs                                    |
-| `playwright`          | Browser automation for fact-checking external sources (NOT for GitHub) |
+| Server                | Purpose                                                                | Source                                      |
+| --------------------- | ---------------------------------------------------------------------- | ------------------------------------------- |
+| `github`              | GitHub API — PRs, issues, file reads, search, branches                 | Bundled with Copilot CLI (auto-loaded)      |
+| `sequential-thinking` | Structured reasoning for multi-step decisions and trade-off analysis   | User-level (registered via `copilot mcp`)   |
+| `context7`            | Up-to-date library / framework docs                                    | User-level (registered via `copilot mcp`)   |
+| `playwright`          | Browser automation for fact-checking external sources (NOT for GitHub) | User-level (registered via `copilot mcp`)   |
+
+### Copilot CLI — registering the user-level MCPs
+
+The non-bundled servers above are registered once at User scope via `copilot mcp add` so they apply across every project, not just this repo. Re-run these on a new machine:
+
+```bash
+copilot mcp add playwright           -- npx -y @playwright/mcp@latest
+copilot mcp add sequential-thinking  -- npx -y @modelcontextprotocol/server-sequential-thinking
+copilot mcp add context7             -- npx -y @upstash/context7-mcp
+```
+
+Verify with `copilot mcp list` (or `/env` inside an interactive session). User-scope config lives at `~/.copilot/mcp-config.json`. **Node 22 must be on PATH when Copilot CLI launches** — if your shell uses nvm, ensure Node 22 is auto-activated, otherwise `npx` falls back to the system Node and the servers fail to start.
+
+For VS Code Copilot Chat or other editors, register the same three servers through that tool's MCP UI — the commands are identical.
 
 ### MUST use Sequential Thinking for
 - Multi-step planning before implementation (new features, automations, refactors)

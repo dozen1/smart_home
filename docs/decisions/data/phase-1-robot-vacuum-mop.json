@@ -4,6 +4,7 @@
   "phase": 1,
   "budget_dkk": 4000,
   "stretch_ceiling_dkk": 4500,
+  "apartment_m2": 63.2,
   "method": "weighted",
   "criteria": [
     { "name": "Durability + parts/spares", "weight": 0.22 },

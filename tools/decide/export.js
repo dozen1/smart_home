@@ -69,6 +69,11 @@ export function renderMarkdown(decision) {
     lines.push('');
   }
 
+  if (typeof decision.apartment_m2 === 'number' && Number.isFinite(decision.apartment_m2) && decision.apartment_m2 > 0) {
+    lines.push(`Apartment: ${decision.apartment_m2} m²`);
+    lines.push('');
+  }
+
   const criteria = decision.criteria ?? [];
   const header = ['Option', 'Price (DKK)', ...criteria.map((c) => escapeMdCell(c.name)), 'Score', 'Verdict'];
   const sep = header.map(() => '---');
@@ -101,7 +106,10 @@ export function renderMarkdown(decision) {
   lines.push('## Citations');
   lines.push('');
   for (const opt of decision.options) {
-    lines.push(`- **${escapeMdLinkText(opt.name)}** — [${hostnameOf(opt.retailer_url)}](${opt.retailer_url}) — _"${escapeMdQuoted(opt.excerpt)}"_  (verified ${opt.last_verified})`);
+    const bp = opt.best_price_url
+      ? `  ·  best price: [${hostnameOf(opt.best_price_url)}](${opt.best_price_url})`
+      : '';
+    lines.push(`- **${escapeMdLinkText(opt.name)}** — [${hostnameOf(opt.retailer_url)}](${opt.retailer_url})${bp} — _"${escapeMdQuoted(opt.excerpt)}"_  (verified ${opt.last_verified})`);
   }
   lines.push('');
 

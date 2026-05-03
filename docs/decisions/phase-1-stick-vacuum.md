@@ -6,6 +6,8 @@ Phase: 1  ·  Method: weighted
 
 Budget: 2,000 DKK  ·  Stretch ceiling: 3,500 DKK
 
+Apartment: 63.2 m²
+
 ## Trade-off table
 
 | Option | Price (DKK) | Durability + parts/spares | Warranty length | Runtime sufficient for 63.2 m² | Weight + ergonomics | Suction on hard floor | User-replaceable battery | Toggle button (no constant trigger hold) | Current discount | Value for price | Wall-mount bracket included | Score | Verdict |

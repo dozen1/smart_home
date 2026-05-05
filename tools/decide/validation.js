@@ -58,6 +58,36 @@ export function validateRetailerUrl(value) {
   return { ok: true };
 }
 
+const AGGREGATOR_ROOTS = ['pricerunner', 'prisjakt'];
+
+function isAggregatorHost(host) {
+  if (!host) return false;
+  const h = host.toLowerCase().replace(/^www\./, '');
+  const root = h.split('.')[0];
+  return AGGREGATOR_ROOTS.includes(root);
+}
+
+export function validateBestPriceUrl(value) {
+  if (value === undefined || value === null || value === '') {
+    return { ok: true };
+  }
+  const base = validateRetailerUrl(value);
+  if (!base.ok) return { ok: false, reason: base.reason.replace(/^retailer_url/, 'best_price_url') };
+  const url = new URL(value);
+  if (isAggregatorHost(url.hostname)) {
+    return { ok: false, reason: 'best_price_url must point at a specific retailer, not a price aggregator (pricerunner, prisjakt)' };
+  }
+  return { ok: true };
+}
+
+export function validateApartmentM2(value) {
+  if (value === undefined || value === null) return { ok: true };
+  if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) {
+    return { ok: false, reason: 'apartment_m2 must be a finite positive number' };
+  }
+  return { ok: true };
+}
+
 export function validateOption(opt) {
   const errors = [];
   if (!opt || typeof opt !== 'object') return { ok: false, errors: ['option'] };
@@ -70,6 +100,9 @@ export function validateOption(opt) {
   }
   const urlCheck = validateRetailerUrl(opt.retailer_url);
   if (!urlCheck.ok) errors.push('retailer_url');
+
+  const bestCheck = validateBestPriceUrl(opt.best_price_url);
+  if (!bestCheck.ok) errors.push('best_price_url');
 
   if (typeof opt.excerpt !== 'string' || opt.excerpt.trim() === '' || opt.excerpt.length > 500) {
     errors.push('excerpt');

@@ -5,6 +5,8 @@ import { scoreWeighted, scorePugh, scorePairwise } from './scoring.js';
 import {
   validateSlug,
   validateRetailerUrl,
+  validateBestPriceUrl,
+  validateApartmentM2,
   validateOption,
   validatePairwiseCompleteness,
   validateBudget,
@@ -643,4 +645,135 @@ test('renderMarkdown: option name is rendered as a markdown link to retailer_url
   });
   // link must appear in trade-off table row (not just citations)
   assert.match(md, /\| \*\*\[Linked\]\(https:\/\/example\.dk\/foo\)\*\* \|/);
+});
+
+// --- best_price_url + apartment_m2 -------------------------------------
+
+test('validateBestPriceUrl: empty/null is allowed (work-in-progress)', () => {
+  assert.equal(validateBestPriceUrl(undefined).ok, true);
+  assert.equal(validateBestPriceUrl(null).ok, true);
+  assert.equal(validateBestPriceUrl('').ok, true);
+});
+
+test('validateBestPriceUrl: accepts a specific DK retailer https URL', () => {
+  assert.equal(validateBestPriceUrl('https://www.power.dk/some-product/p-1234').ok, true);
+  assert.equal(validateBestPriceUrl('https://www.elgiganten.dk/product/foo').ok, true);
+  assert.equal(validateBestPriceUrl('https://www.proshop.dk/Stoevsuger/Foo/3000000').ok, true);
+});
+
+test('validateBestPriceUrl: rejects pricerunner aggregator hostnames', () => {
+  assert.equal(validateBestPriceUrl('https://www.pricerunner.dk/pl/19-3308868798/Foo').ok, false);
+  assert.equal(validateBestPriceUrl('https://pricerunner.com/pl/foo').ok, false);
+});
+
+test('validateBestPriceUrl: rejects prisjakt aggregator hostnames', () => {
+  assert.equal(validateBestPriceUrl('https://www.prisjakt.dk/category.php?id=1').ok, false);
+  assert.equal(validateBestPriceUrl('https://prisjakt.no/foo').ok, false);
+});
+
+test('validateBestPriceUrl: rejects non-https', () => {
+  assert.equal(validateBestPriceUrl('http://www.power.dk/').ok, false);
+});
+
+test('validateBestPriceUrl: rejects loopback and private addresses', () => {
+  assert.equal(validateBestPriceUrl('https://127.0.0.1/').ok, false);
+  assert.equal(validateBestPriceUrl('https://10.0.0.5/').ok, false);
+});
+
+test('validateOption: accepts option with valid best_price_url', () => {
+  const r = validateOption({
+    id: 'a', name: 'X', price_dkk: 100,
+    retailer_url: 'https://www.pricerunner.dk/pl/foo',
+    best_price_url: 'https://www.power.dk/foo',
+    excerpt: 'x', last_verified: today(),
+  });
+  assert.deepEqual(r, { ok: true });
+});
+
+test('validateOption: rejects option with aggregator best_price_url', () => {
+  const r = validateOption({
+    id: 'a', name: 'X', price_dkk: 100,
+    retailer_url: 'https://example.dk/',
+    best_price_url: 'https://www.pricerunner.dk/pl/foo',
+    excerpt: 'x', last_verified: today(),
+  });
+  assert.equal(r.ok, false);
+  assert.ok(r.errors.includes('best_price_url'));
+});
+
+test('validateOption: missing best_price_url is OK (optional field)', () => {
+  const r = validateOption({
+    id: 'a', name: 'X', price_dkk: 100,
+    retailer_url: 'https://example.dk/',
+    excerpt: 'x', last_verified: today(),
+  });
+  assert.deepEqual(r, { ok: true });
+});
+
+test('validateApartmentM2: omitted/null is allowed', () => {
+  assert.equal(validateApartmentM2(undefined).ok, true);
+  assert.equal(validateApartmentM2(null).ok, true);
+});
+
+test('validateApartmentM2: accepts positive number', () => {
+  assert.equal(validateApartmentM2(63.2).ok, true);
+  assert.equal(validateApartmentM2(80).ok, true);
+});
+
+test('validateApartmentM2: rejects zero, negative, NaN, Infinity, strings', () => {
+  assert.equal(validateApartmentM2(0).ok, false);
+  assert.equal(validateApartmentM2(-1).ok, false);
+  assert.equal(validateApartmentM2(Number.NaN).ok, false);
+  assert.equal(validateApartmentM2(Number.POSITIVE_INFINITY).ok, false);
+  assert.equal(validateApartmentM2('63.2').ok, false);
+});
+
+test('renderMarkdown: shows Apartment line when apartment_m2 set', () => {
+  const md = renderMarkdown({
+    slug: 'b', title: 'T', phase: 1, method: 'weighted',
+    apartment_m2: 63.2,
+    criteria: [{ name: 'X', weight: 1 }],
+    options: [{ id: 'a', name: 'A', price_dkk: 100, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
+    notes: '', decision: null,
+  });
+  assert.match(md, /Apartment: 63\.2 m²/);
+});
+
+test('renderMarkdown: omits Apartment line when apartment_m2 absent', () => {
+  const md = renderMarkdown({
+    slug: 'b', title: 'T', phase: 1, method: 'weighted',
+    criteria: [{ name: 'X', weight: 1 }],
+    options: [{ id: 'a', name: 'A', price_dkk: 100, retailer_url: 'https://example.dk/', excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 } }],
+    notes: '', decision: null,
+  });
+  assert.doesNotMatch(md, /Apartment: /);
+});
+
+test('renderMarkdown: includes best_price_url in citations', () => {
+  const md = renderMarkdown({
+    slug: 'b', title: 'T', phase: 1, method: 'weighted',
+    criteria: [{ name: 'X', weight: 1 }],
+    options: [{
+      id: 'a', name: 'A', price_dkk: 100,
+      retailer_url: 'https://www.pricerunner.dk/pl/foo',
+      best_price_url: 'https://www.power.dk/p/foo',
+      excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 },
+    }],
+    notes: '', decision: null,
+  });
+  assert.match(md, /best price: \[power\.dk\]\(https:\/\/www\.power\.dk\/p\/foo\)/);
+});
+
+test('renderMarkdown: omits best price segment when option has no best_price_url', () => {
+  const md = renderMarkdown({
+    slug: 'b', title: 'T', phase: 1, method: 'weighted',
+    criteria: [{ name: 'X', weight: 1 }],
+    options: [{
+      id: 'a', name: 'A', price_dkk: 100,
+      retailer_url: 'https://www.pricerunner.dk/pl/foo',
+      excerpt: 'x', last_verified: '2026-04-25', scores: { X: 5 },
+    }],
+    notes: '', decision: null,
+  });
+  assert.doesNotMatch(md, /best price:/);
 });

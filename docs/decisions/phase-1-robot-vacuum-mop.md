@@ -6,6 +6,8 @@ Phase: 1  ·  Method: weighted
 
 Budget: 4,000 DKK  ·  Stretch ceiling: 4,500 DKK
 
+Apartment: 63.2 m²
+
 ## Trade-off table
 
 | Option | Price (DKK) | Durability + parts/spares | Warranty length | Discount vs MSRP | Value for price | Dock fits ≤60 cm + clearances | Threshold clearance ≥22 mm | Mop tech laminate-safe | Matter / ecosystem flexibility | Suction + navigation | Score | Verdict |

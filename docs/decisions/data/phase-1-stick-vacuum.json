@@ -4,6 +4,7 @@
   "phase": 1,
   "budget_dkk": 2000,
   "stretch_ceiling_dkk": 3500,
+  "apartment_m2": 63.2,
   "method": "weighted",
   "criteria": [
     {

@@ -17,7 +17,7 @@ function emptyDecision() {
 function newOption() {
   return {
     id: `opt-${Math.random().toString(36).slice(2, 8)}`,
-    name: '', price_dkk: null, retailer_url: '', excerpt: '', last_verified: '',
+    name: '', price_dkk: null, retailer_url: '', best_price_url: '', excerpt: '', last_verified: '',
     scores: {}, pugh: {}, pairwise: {},
   };
 }
@@ -70,6 +70,7 @@ async function save() {
   state.decision.phase = $('#phase').value ? parseInt($('#phase').value, 10) : null;
   state.decision.budget_dkk = $('#budget').value ? +$('#budget').value : null;
   state.decision.stretch_ceiling_dkk = $('#stretch-ceiling').value ? +$('#stretch-ceiling').value : null;
+  state.decision.apartment_m2 = $('#apartment-m2').value ? +$('#apartment-m2').value : null;
   state.decision.notes = $('#notes').value;
   state.decision.decision = $('#decision-text').value || null;
   const r = await fetch(`/api/decisions/${encodeURIComponent(slug)}`, {
@@ -118,6 +119,14 @@ function priceHtml(o) {
   return t ? ` <span class="price">${escapeHtml(t.trim())}</span>` : '';
 }
 
+function bestPriceHtml(o) {
+  if (!o || !o.best_price_url) return '';
+  let host;
+  try { host = new URL(o.best_price_url).hostname.replace(/^www\./, ''); }
+  catch { return ''; }
+  return ` <a class="best-price" href="${escapeHtml(o.best_price_url)}" target="_blank" rel="noopener">buy at ${escapeHtml(host)}</a>`;
+}
+
 function renderCriteria() {
   const tbody = $('#criteria-table tbody');
   tbody.innerHTML = '';
@@ -154,6 +163,7 @@ function renderOptions() {
         <label>Name<input data-i="${i}" data-k="name" value="${escapeHtml(o.name)}" /></label>
         <label>Price (DKK)<input data-i="${i}" data-k="price_dkk" type="number" min="0" value="${o.price_dkk ?? ''}" /></label>
         <label>Retailer URL<input data-i="${i}" data-k="retailer_url" value="${escapeHtml(o.retailer_url)}" /></label>
+        <label>Best DK price URL<input data-i="${i}" data-k="best_price_url" value="${escapeHtml(o.best_price_url ?? '')}" placeholder="https://www.power.dk/..." /></label>
         <label>Last verified<input data-i="${i}" data-k="last_verified" type="date" value="${escapeHtml(o.last_verified)}" /></label>
       </div>
       <label>Excerpt<textarea data-i="${i}" data-k="excerpt" rows="2">${escapeHtml(o.excerpt)}</textarea></label>
@@ -192,7 +202,7 @@ function buildWeightedPanel() {
     const cells = state.decision.criteria.map((c) =>
       `<td><input data-i="${i}" data-c="${escapeHtml(c.name)}" type="number" min="0" max="10" value="${o.scores?.[c.name] ?? ''}" /></td>`).join('');
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${escapeHtml(o.name) || '(unnamed)'}${priceHtml(o)}</td>${cells}`;
+    tr.innerHTML = `<td>${escapeHtml(o.name) || '(unnamed)'}${priceHtml(o)}${bestPriceHtml(o)}</td>${cells}`;
     tbody.appendChild(tr);
   });
   tbl.appendChild(tbody);
@@ -223,7 +233,7 @@ function buildPughPanel() {
   const tbody = document.createElement('tbody');
   state.decision.options.forEach((o, i) => {
     if (o.id === state.decision.baseline_option) {
-      tbody.innerHTML += `<tr><td>${escapeHtml(o.name)}${priceHtml(o)} (baseline)</td>${state.decision.criteria.map(() => '<td>0</td>').join('')}</tr>`;
+      tbody.innerHTML += `<tr><td>${escapeHtml(o.name)}${priceHtml(o)}${bestPriceHtml(o)} (baseline)</td>${state.decision.criteria.map(() => '<td>0</td>').join('')}</tr>`;
       return;
     }
     const cells = state.decision.criteria.map((c) =>
@@ -232,7 +242,7 @@ function buildPughPanel() {
         <option value="0" ${(o.pugh?.[c.name] ?? 0) === 0 ? 'selected' : ''}>=</option>
         <option value="1" ${o.pugh?.[c.name] === 1 ? 'selected' : ''}>+</option>
       </select></td>`).join('');
-    tbody.innerHTML += `<tr><td>${escapeHtml(o.name) || '(unnamed)'}${priceHtml(o)}</td>${cells}</tr>`;
+    tbody.innerHTML += `<tr><td>${escapeHtml(o.name) || '(unnamed)'}${priceHtml(o)}${bestPriceHtml(o)}</td>${cells}</tr>`;
   });
   tbl.appendChild(tbody);
   wrap.appendChild(tbl);
@@ -293,7 +303,7 @@ function renderRanking() {
     const li = document.createElement('li');
     const score = state.decision.method === 'pugh' ? r.score : r.score.toFixed(2);
     const opt = state.decision.options.find((o) => o.id === r.id);
-    li.textContent = `${r.name || r.id}${priceText(opt)} — ${score}`;
+    li.innerHTML = `${escapeHtml(r.name || r.id)}${priceHtml(opt)}${bestPriceHtml(opt)} — ${escapeHtml(String(score))}`;
     ol.appendChild(li);
   }
 }
@@ -305,6 +315,7 @@ function renderEditor() {
   $('#phase').value = state.decision.phase ?? '';
   $('#budget').value = state.decision.budget_dkk ?? '';
   $('#stretch-ceiling').value = state.decision.stretch_ceiling_dkk ?? '';
+  $('#apartment-m2').value = state.decision.apartment_m2 ?? '';
   $('#notes').value = state.decision.notes ?? '';
   $('#decision-text').value = state.decision.decision ?? '';
   renderCriteria();
@@ -330,6 +341,7 @@ $('#title').addEventListener('input', (e) => { if (state.decision) state.decisio
 $('#phase').addEventListener('input', (e) => { if (state.decision) state.decision.phase = e.target.value ? +e.target.value : null; });
 $('#budget').addEventListener('input', (e) => { if (state.decision) state.decision.budget_dkk = e.target.value ? +e.target.value : null; });
 $('#stretch-ceiling').addEventListener('input', (e) => { if (state.decision) state.decision.stretch_ceiling_dkk = e.target.value ? +e.target.value : null; });
+$('#apartment-m2').addEventListener('input', (e) => { if (state.decision) state.decision.apartment_m2 = e.target.value ? +e.target.value : null; });
 $('#notes').addEventListener('input', (e) => { if (state.decision) state.decision.notes = e.target.value; });
 $('#decision-text').addEventListener('input', (e) => { if (state.decision) state.decision.decision = e.target.value || null; });
 
